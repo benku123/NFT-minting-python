@@ -15,7 +15,24 @@ Additionally, you'll need some Python libraries which can be installed using pip
 pip install web3 solcx python-dotenv
 ```
 
+## Javascript Configuration
+**install npm**
+```bash
+npm intall --global yarn
+yarn global add ganache-cli
+```
 
+## install Brownie on WIndows
+```
+pip install pipx
+pipx ensurepath 
+```
+
+## Run brownie
+
+```angular2html
+brownie init 
+```
 ## Configuration
 1) Install Solc: The Solidity compiler can be installed directly from the script using install_solc('0.6.0')
 

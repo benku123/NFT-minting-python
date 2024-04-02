@@ -12,10 +12,11 @@ contract SimpleStorage {
     People[] people;
     mapping (string => uint) public dictionary;
 
-    function store(uint x) public {
+    function store(uint x) public returns(uint){
         storedData = x;
+        return storedData;
     }
-    function retrive() public view returns(uint){
+    function retrieve() public view returns(uint){
         return storedData;
     }
 
