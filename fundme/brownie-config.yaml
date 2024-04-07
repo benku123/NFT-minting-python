@@ -7,9 +7,18 @@ compiler:
       - "@chainlink=smartcontractkit/chainlink-brownie-contracts@1.1.1"
 
 dotenv: .env
-wallets:
-    from_key: ${PRIVATE_KEY}
+
 
 networks:
+  default: ganache-local
   sepolia:
     eth_usd_price_feed: '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e'
+    varify: True
+    from_key: ${PRIVATE_KEY}
+  development:
+    varify: False
+  mainnet-fork:
+    eth_usd_price_feed: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'
+    varify: False
+  ganache-local:
+    varify: False

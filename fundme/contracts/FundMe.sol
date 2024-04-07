@@ -29,6 +29,12 @@ contract FundMe {
         owner = msg.sender;
     }
 
+    function getEntranceFee() public view returns (uint256){
+        uint256 minimumUSD = 50 *50**18;
+        uint256 price = getPrice();
+        uint256 precision = 1 * 10 ** 18;
+        return (minimumUSD * precision) / price;
+    }
     function fund() public payable {
         // 18 digit number to be compared with donated amount
         uint256 minimumUSD = 50 * 10**18;
