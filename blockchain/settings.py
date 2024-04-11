@@ -62,7 +62,7 @@ ROOT_URLCONF = "blockchain.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -132,3 +132,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 private_key = os.getenv("PRIVATE_KEY")
 rpc_url = os.getenv("RPC_URL")
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

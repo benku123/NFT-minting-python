@@ -5,21 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/blockchain/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compiled_code.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/image/MetaMask.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/image/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/registration/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/registration/signup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockchain/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockchain/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,9 +58,12 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "backend-django",
+    "last_opened_file_path": "C:/Users/hacker/PycharmProjects/test/templates/registration",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -54,6 +73,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\hacker\PycharmProjects\test\templates\registration" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

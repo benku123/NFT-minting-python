@@ -16,10 +16,10 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from contract import views
+from django.urls import path, include
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.deploy_contact, name="index")
+    path("", include("contract.urls"), name="contract"),
 ]
