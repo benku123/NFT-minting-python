@@ -1,0 +1,12 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    <form action="upload/folder/" method="POST" class="dropzone dz">
+    {% csrf_token %}
+    <div class="fallback">
+        <input name="file" type="file" multiple>
+        
+    </div>
+    </form>
+
+{% endblock %}

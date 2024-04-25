@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h2>Your Layer Folders</h2>
+<ul>
+    {% for folder in folders %}
+    <li>{{ folder.folder.name }} - <a href="{% url 'view_generated_images' folder.id %}">View Generated Images</a></li>
+    {% endfor %}
+    <a href="{% url 'create_folder' %}">Upload New Folder</a>
+</ul>
+{% endblock %}
