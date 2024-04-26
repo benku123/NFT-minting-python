@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Generated Images for Folder {{ folder_id }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+    <div class="container" style="margin-top: 200px; margin-left: 100px;">
+        <h2 class="mb-4">Generated Images for Folder {{ folder_id }}</h2>
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 {% endblock %}

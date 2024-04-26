@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ApiProfile
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect
@@ -13,7 +13,7 @@ import json
 from django.shortcuts import get_object_or_404, redirect
 from .models import LayerFolder, GeneratedImage
 from .forms import LayerFolderForm
-
+from django.views.generic import ListView
 
 from django.shortcuts import render, redirect
 from .forms import LayerFolderForm
@@ -24,6 +24,11 @@ from django.core.files.base import ContentFile
 from .utils import generate_image_from_zip
 import os
 from io import BytesIO
+from django.contrib.auth import logout
+
+
+def logout_view(request):
+    logout(request)
 
 def signup_view(request):
     if request.method == 'POST':
@@ -52,8 +57,10 @@ def save_account(request):
 
     return JsonResponse({"success": "Ethereum address saved successfully."})
 
+
 def home(request):
-    return render(request, 'images/index.html')
+    images = GeneratedImage.objects.filter()[:8]
+    return render(request, 'images/index.html', {'images': images})
 
 
 @login_required
@@ -70,7 +77,7 @@ def generate_images_view(request):
             layer_folder = form.cleaned_data['layer_folder']
             folder_path = layer_folder.folder.path
 
-            for i in range(10):
+            for i in range(100):
                 generated_image = generate_image_from_zip(folder_path)
 
                 if generated_image:
@@ -90,15 +97,19 @@ def generate_images_view(request):
 
     return render(request, 'images/generate_images.html', {'form': form})
 
-class CreatingFolderView(TemplateView):
+class CreatingFolderView(LoginRequiredMixin, TemplateView):
     template_name = 'images/create_folder.html'
 
+class GeneratedImageView(LoginRequiredMixin, ListView):
+    model = GeneratedImage
+    template_name = 'images/list_images.html'
+    context_object_name = 'images'
 
 @login_required
 def create_folder(request):
     if request.method == 'POST':
         my_file = request.FILES.get("file")
-        LayerFolder.objects.create(user=request.user, folder=my_file)
+        LayerFolder.objects.create(user=request.user, folder=my_file, name=my_file.name)
         return redirect('list_folders')
 
     return JsonResponse({"post": "false"})

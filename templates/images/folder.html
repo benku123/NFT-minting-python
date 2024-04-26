@@ -1,12 +1,45 @@
 {% extends 'base.html' %}
-
-
+{% load static %}
 {% block content %}
-<h2>Your Layer Folders</h2>
-<ul>
-    {% for folder in folders %}
-    <li>{{ folder.folder.name }} - <a href="{% url 'view_generated_images' folder.id %}">View Generated Images</a></li>
-    {% endfor %}
-    <a href="{% url 'create_folder' %}">Upload New Folder</a>
-</ul>
+<div class="live-stream" style="margin-top: 200px; margin-left: 100px; margin-right: 100px;">
+            <div class="col-lg-12">
+              <div class="heading-section">
+                <h4><em>Most Popular</em> Layers</h4>
+              </div>
+            </div>
+            <div class="row">
+              {% for folder in folders %}
+              <div class="col-lg-3 col-sm-6">
+                <div class="item">
+                  <div class="thumb">
+                    <img src="{{ folder.image.url }}" alt="">
+                    <div class="hover-effect">
+                      <div class="content">
+                        <div class="live">
+                          <a href="#">watch</a>
+                        </div>
+                        <ul>
+                          <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
+                          <li><a href="#"><i class="fa fa-gamepad"></i> {{ folder.name }}</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="down-content">
+                    <div class="avatar">
+                      <img src="assets/images/avatar-02.jpg" alt="" style="max-width: 46px; border-radius: 50%; float: left;">
+                    </div>
+                    <span><i class="fa fa-check"></i> {{ folder.user.username }}</span>
+                    <h4>{{ folder.name }}</h4>
+                  </div> 
+                </div>
+              </div>{% endfor %}
+                 
+              <div class="col-lg-12">
+                <div class="main-button">
+                  <a href="streams.html">Load More Streams</a>
+                </div>
+              </div>
+            </div>
+          </div>
 {% endblock %}

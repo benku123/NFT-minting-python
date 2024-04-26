@@ -12,9 +12,10 @@ class ApiProfile(models.Model):
 class LayerFolder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.FileField(upload_to='layer_folders/')
-
+    name=  models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(upload_to='layers_images/', null=True, blank=True)
     def __str__(self):
-        return f"{self.user.username}'s layer folder {self.id}"
+        return f"{self.user.username}'s layer folder: {self.name}"
 
 class GeneratedImage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
