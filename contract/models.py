@@ -21,7 +21,7 @@ class GeneratedImage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     layer_folder = models.ForeignKey(LayerFolder, related_name='generated_images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='generated_images/')
-
+    ipfs_hash = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Image {self.id} from {self.layer_folder}"

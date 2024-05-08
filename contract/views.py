@@ -1,25 +1,20 @@
-from django.http import HttpResponse
+import random
+
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ApiProfile
-from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 import json
-from django.shortcuts import get_object_or_404, redirect
-from .models import LayerFolder, GeneratedImage
-from .forms import LayerFolderForm
-from django.views.generic import ListView
+import ipfshttpclient
+from django.shortcuts import get_object_or_404
 
 from django.shortcuts import render, redirect
 from .forms import LayerFolderForm
 from .models import LayerFolder, GeneratedImage
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
+
 from django.core.files.base import ContentFile
 from .utils import generate_image_from_zip
 import os
@@ -68,6 +63,12 @@ def list_folders(request):
     folders = LayerFolder.objects.filter(user=request.user)
     return render(request, 'images/folder.html', {'folders': folders})
 
+@login_required
+def list_folders_details(request, id):
+    folder = get_object_or_404(LayerFolder, user=request.user, pk=id)
+    images = folder.generated_images.all()
+    return render(request, 'images/list_images.html', {'folder': folder, 'images': images})
+
 
 @login_required
 def generate_images_view(request):
@@ -77,17 +78,31 @@ def generate_images_view(request):
             layer_folder = form.cleaned_data['layer_folder']
             folder_path = layer_folder.folder.path
 
-            for i in range(100):
-                generated_image = generate_image_from_zip(folder_path)
+            generated_images = []
+            # Connect to IPFS
+            with ipfshttpclient.connect('/ip4/127.0.0.1/tcp/5001') as client:
+                for i in range(100):
+                    generated_image = generate_image_from_zip(folder_path)
+                    if generated_image:
+                        image_io = BytesIO()
+                        generated_image.save(image_io, format='PNG')
+                        filename = f'generated_image_{layer_folder.id}_{i+1}.png'
 
-                if generated_image:
-                    image_io = BytesIO()
-                    generated_image.save(image_io, format='PNG')
-                    filename = f'generated_image_{layer_folder.id}_{i+1}.png'
+                        new_image = GeneratedImage(layer_folder=layer_folder, user=request.user)
+                        new_image.image.save(filename, ContentFile(image_io.getvalue()))
+                        new_image.save()
+                        generated_images.append(new_image)
 
-                    new_image = GeneratedImage(layer_folder=layer_folder, user=request.user)
-                    new_image.image.save(filename, ContentFile(image_io.getvalue()))
-                    new_image.save()
+                        # Upload to IPFS
+                        image_path = new_image.image.path
+                        ipfs_result = client.add(image_path)
+                        new_image.ipfs_hash = ipfs_result['Hash']
+                        new_image.save()
+
+            if generated_images:
+                random_image = random.choice(generated_images)
+                layer_folder.image = random_image.image
+                layer_folder.save()
 
             return redirect('home')
         else:
@@ -99,11 +114,6 @@ def generate_images_view(request):
 
 class CreatingFolderView(LoginRequiredMixin, TemplateView):
     template_name = 'images/create_folder.html'
-
-class GeneratedImageView(LoginRequiredMixin, ListView):
-    model = GeneratedImage
-    template_name = 'images/list_images.html'
-    context_object_name = 'images'
 
 @login_required
 def create_folder(request):
