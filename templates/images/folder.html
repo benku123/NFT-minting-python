@@ -2,38 +2,40 @@
 {% load static %}
 {% block content %}
 <div class="live-stream" style="margin-top: 200px; margin-left: 100px; margin-right: 100px;">
-            <div class="col-lg-12">
+    <div class="col-lg-12">
               <div class="heading-section">
                 <h4><em>Most Popular</em> Layers</h4>
               </div>
             </div>
             <div class="row">
               {% for folder in folders %}
-              <div class="col-lg-3 col-sm-6">
-                <div class="item">
-                  <div class="thumb">
-                    <img src="{{ folder.image.url }}" alt="">
-                    <div class="hover-effect">
-                      <div class="content">
-                        <div class="live">
-                          <a href="#">watch</a>
+                  <a href="{% url "view_list_images" folder.pk %}">
+                      <div class="col-lg-3 col-sm-6">
+                        <div class="item">
+                          <div class="thumb">
+                            <div class="hover-effect">
+                              <div class="content">
+                                <div class="live">
+                                  <a href="#">watch</a>
+                                </div>
+                                <ul>
+                                  <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
+                                  <li><a href="#"><i class="fa fa-gamepad"></i> {{ folder.name }}</a></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="down-content">
+                            <div class="avatar">
+                              <img src="https://ipfs.io/ipfs/{{ folder.ipfs_image_hash }}" alt="Generated Image">
+                            </div>
+                            <span><i class="fa fa-check"></i> {{ folder.user.username }}</span>
+                            <h4>{{ folder.name }}</h4>
+                          </div> 
                         </div>
-                        <ul>
-                          <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
-                          <li><a href="#"><i class="fa fa-gamepad"></i> {{ folder.name }}</a></li>
-                        </ul>
                       </div>
-                    </div>
-                  </div>
-                  <div class="down-content">
-                    <div class="avatar">
-                      <img src="assets/images/avatar-02.jpg" alt="" style="max-width: 46px; border-radius: 50%; float: left;">
-                    </div>
-                    <span><i class="fa fa-check"></i> {{ folder.user.username }}</span>
-                    <h4>{{ folder.name }}</h4>
-                  </div> 
-                </div>
-              </div>{% endfor %}
+                  </a>
+              {% endfor %}
                  
               <div class="col-lg-12">
                 <div class="main-button">

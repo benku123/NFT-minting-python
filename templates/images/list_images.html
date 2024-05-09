@@ -5,39 +5,41 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="page-content">
-            
+
           <div class="most-popular">
           <h2>{{ folder.name }}</h2>
           <p>Owned by: {{ folder.user.username }}</p>
           <div>
             <h3>Folder Image:</h3>
-            {% if folder.image %}
-              <img src="{{ folder.image.url }}" alt="Main image for {{ folder.name }}">
-            {% else %}
-              <p>No main image available for this folder.</p>
-            {% endif %}
+              <img src="https://ipfs.io/ipfs/{{ folder.ipfs_image_hash }}" style="width: 200px; height: 200px;" alt="Generated Image">
+
           </div>
             <div class="row">
               <div class="col-lg-12">
+              {% if images %}
                 <div class="heading-section">
                   <h4><em>Most Popular</em> Right Now</h4>
                 </div>
                 <div class="row">
                 
-                    {% for image in folder %}
+                    {% for image in images %}
                       <div class="col-lg-3 col-sm-6">
                         <div class="item">
-                          <img src="{{ image.image.url }}" alt="Generated Image">
+                          <img src="https://ipfs.io/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
                           <h4>Image Information</h4>
                           <ul>
-                            <li><i class="fa fa-star"></i> 4.8</li> <!-- Example rating, adjust as needed -->
-                            <li><i class="fa fa-download"></i> 2.3M</li> <!-- Example download count, adjust as needed -->
+                            <li><i class="fa fa-star"></i> 4.8</li> 
+                            <li><i class="fa fa-download"></i> 2.3M</li>
                           </ul>
                         </div>
                       </div>
                     {% endfor %}
                       </div>
+                  {% else %}
+                    <h1>Currently not images minted</h1>
+                {% endif %}
                     </div>
+            
                   </div>
           
                   

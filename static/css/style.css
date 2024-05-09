@@ -207,3 +207,32 @@ a:hover{
 	}
 }
 
+
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap");
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(to bottom, black, rgba(57, 35, 61, 0.8));
+            color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+
+
+
+        .signup-container {
+            background: rgba(0, 0, 0, 0.6); /* Set the background color to black with some transparency */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(135, 117, 138, 0.2), 0 0 10px rgba(135, 117, 138, 0.1) inset;
+            width: 300px;
+            text-align: center;
+            color: white;
+    /* Adjust the duration (10s) as needed */
+}
+

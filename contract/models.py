@@ -12,8 +12,9 @@ class ApiProfile(models.Model):
 class LayerFolder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.FileField(upload_to='layer_folders/')
-    name=  models.CharField(max_length=100, null=True, blank=True)
-    image = models.ImageField(upload_to='layers_images/', null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    ipfs_image_hash = models.CharField(max_length=255, blank=True, null=True)
+
     def __str__(self):
         return f"{self.user.username}'s layer folder: {self.name}"
 

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'contract',
-
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +59,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "blockchain.urls"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
 
 TEMPLATES = [
     {
