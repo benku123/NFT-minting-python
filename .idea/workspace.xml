@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/folder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/folder.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/generate_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/generate_images.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2dtNCTVgbgeJlXWc2YBMO0eubGn" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.urls.executor&quot;: &quot;Run&quot;,
+    &quot;Python.views.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;backend-django&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hacker/PycharmProjects/test/templates/images&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\hacker\PycharmProjects\test\templates\images" />
+      <recent name="C:\Users\hacker\PycharmProjects\test\templates\registration" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-5a2391486177-2887949eec09-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.13763.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="" />
+      <created>1710823286560</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1710823286560</updated>
+      <workItem from="1710823338093" duration="11000" />
+      <workItem from="1711463714158" duration="13000" />
+      <workItem from="1711476498024" duration="1378000" />
+      <workItem from="1711515681352" duration="1838000" />
+      <workItem from="1711635884242" duration="6244000" />
+      <workItem from="1711644325985" duration="2681000" />
+      <workItem from="1711682214603" duration="998000" />
+      <workItem from="1713519651398" duration="597000" />
+      <workItem from="1713534038579" duration="12000" />
+      <workItem from="1713716269069" duration="4019000" />
+      <workItem from="1713890074448" duration="1077000" />
+      <workItem from="1713930843114" duration="369000" />
+      <workItem from="1714056330498" duration="5448000" />
+      <workItem from="1714102759367" duration="89000" />
+      <workItem from="1714108340805" duration="94000" />
+      <workItem from="1714134060243" duration="8000" />
+      <workItem from="1715179223106" duration="3921000" />
+      <workItem from="1715186416175" duration="1119000" />
+      <workItem from="1715187925958" duration="2223000" />
+      <workItem from="1715190656398" duration="434000" />
+      <workItem from="1715191453352" duration="52000" />
+      <workItem from="1715259095733" duration="18980000" />
+      <workItem from="1715310682482" duration="298000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/test$urls.coverage" NAME="urls Coverage Results" MODIFIED="1715181870489" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contract" />
+    <SUITE FILE_PATH="coverage/test$views.coverage" NAME="views Coverage Results" MODIFIED="1713717348258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/contract" />
+  </component>
+</project>

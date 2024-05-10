@@ -1,3 +1,14 @@
+<div style="text-align: center;">
+    <img src="https://play-lh.googleusercontent.com/8rzHJpfkdFwA0Lo6_CHUjoNt8OU3EyIe9BZNKGqj0C8BhleguW9LhXHbS46FAtLAJ9r2" alt="Ethereum Logo" style="width: 50px; margin: 10px; border-radius: 50%;">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLECU3MZR4Wla7dhDIyKSbRpUIVFfLjfN0HqLOg_zejg&s" alt="Smart Contract Icon" style="width: 55px; height:60px; margin: 10px; border-radius: 50%;">
+</div>
+
+## Ethereum Smart Contract Deployment Example
+
+In this example, we have adjusted the images to appear round by applying a `border-radius` of `50%` to each. This styling creates a visually appealing circular representation of the Ethereum platform and smart contracts icons.
+
+- The rounded images create a sleek and modern aesthetic, aligning well with
+
 # Ethereum Smart Contract Deployment Example
 
 ## Description
