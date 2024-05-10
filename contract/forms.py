@@ -60,6 +60,6 @@ class LayerFolderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user is not None:
 
-            self.fields['layer_folder'].queryset = LayerFolder.objects.filter(user=user)
+        self.fields['layer_folder'].queryset = LayerFolder.objects.filter(user=user)
+        self.fields['layer_folder'].widget.attrs.update({'class': 'dropbtn', "style": "width: 400px;"})

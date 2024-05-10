@@ -55,7 +55,6 @@ def save_account(request):
     data = json.loads(request.body)
     eth_address = data.get('account')
     profile, created = ApiProfile.objects.get_or_create(user=request.user)
-    print(profile, created)
     profile.eth_address = eth_address
     profile.save()
 
