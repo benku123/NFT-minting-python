@@ -27,9 +27,7 @@ if (typeof window.ethereum !== 'undefined') {
 async function connectMetaMask() {
     if (typeof window.ethereum !== 'undefined') {
         try {
-            // Request account access if needed
             const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            // Accounts now exposed, send the first account to your Django backend
             const account = accounts[0];
             console.log('Connected account:', account);
             sendAccountToServer(account);
@@ -104,3 +102,8 @@ const signupContainer = document.getElementById('signup-container');
             signupContainer.style.transform = 'scale(1)';
         }, 100);
     });
+
+
+
+
+

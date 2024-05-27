@@ -5,13 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/contract_abi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/contract_address.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0007_alter_generatedimage_options_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0008_generatedimage_dislikes_generatedimage_ipfs_hash_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0009_generatedimage_tx_hash.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2.url" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2_fLbRO6I.url" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2_obKusir.url" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_19UG3Aw.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_2.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_354OToL.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_65bCteM.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_BpN7Gbs.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_IRlc1qo.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_Ov463TE.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_QsoE65u.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_gDIB7pO.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_zJ3MVKj.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contract/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockchain/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/images/folder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/folder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/images/generate_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/generate_images.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/custom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/isotope.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/isotope.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/owl-carousel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/tabs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/assets/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/list_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/list_images.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +86,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
     &quot;git-widget-placeholder&quot;: &quot;backend-django&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/hacker/PycharmProjects/test/templates/images&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hacker/PycharmProjects/test&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -70,6 +99,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\hacker\PycharmProjects\test" />
+      <recent name="C:\Users\hacker\PycharmProjects\test\contract" />
       <recent name="C:\Users\hacker\PycharmProjects\test\templates\images" />
       <recent name="C:\Users\hacker\PycharmProjects\test\templates\registration" />
     </key>
@@ -111,7 +142,29 @@
       <workItem from="1715190656398" duration="434000" />
       <workItem from="1715191453352" duration="52000" />
       <workItem from="1715259095733" duration="18980000" />
-      <workItem from="1715310682482" duration="298000" />
+      <workItem from="1715310682482" duration="1203000" />
+      <workItem from="1715321484404" duration="14000" />
+      <workItem from="1715451244181" duration="775000" />
+      <workItem from="1715515018165" duration="51000" />
+      <workItem from="1715515248985" duration="603000" />
+      <workItem from="1715655041572" duration="11000" />
+      <workItem from="1715656032883" duration="89000" />
+      <workItem from="1715695143248" duration="1554000" />
+      <workItem from="1715758119850" duration="416000" />
+      <workItem from="1715770541440" duration="2347000" />
+      <workItem from="1715823892878" duration="48000" />
+      <workItem from="1715829984050" duration="5067000" />
+      <workItem from="1715869228527" duration="4038000" />
+      <workItem from="1715923745493" duration="12000" />
+      <workItem from="1716297904913" duration="1017000" />
+      <workItem from="1716371465315" duration="74000" />
+      <workItem from="1716472707519" duration="2588000" />
+      <workItem from="1716476243855" duration="693000" />
+      <workItem from="1716477615533" duration="1228000" />
+      <workItem from="1716479179541" duration="907000" />
+      <workItem from="1716480323173" duration="1908000" />
+      <workItem from="1716492844542" duration="155000" />
+      <workItem from="1716808093043" duration="1488000" />
     </task>
     <servers />
   </component>

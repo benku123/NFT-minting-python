@@ -26,7 +26,7 @@
                         <li><a href="{% url 'list_folders' %}" class="active">Collections</a></li>
                         <li><a href="{% url 'creating-file-view' %}">Create Layer</a></li>
                         <li><a href="{% url 'personal_list_folder' %}">Layer List</a></li>
-                        <li><a href="{% url 'view_generated_images' %}">Generating Images</a></li>
+                        <li><a href="{% url 'generate_and_mint_nfts' %}">Generating Images</a></li>
                         {% if user.is_authenticated %}
                             <li><a href="{% url 'logout' %}">Logout</a></li>
                         {% else %}
@@ -36,9 +36,52 @@
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
-
+                    <ul>
+                           <button id="connectButton">Connect with MetaMask</button>
+                    </ul>
                 </nav>
             </div>
         </div>
     </div>
   </header>
+
+    <script>
+        let web3;
+        let userAddress;
+        let privateKey;
+
+        document.getElementById('connectButton').onclick = async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(window.ethereum);
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userAddress = accounts[0];
+                    alert(`Connected: ${userAddress}`);
+                    const privateKeyInput = prompt('Please enter your private key');
+                    privateKey = privateKeyInput;  // Store the private key for session storage
+                    sendAccountToServer(userAddress, privateKey);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                alert('MetaMask is not installed');
+            }
+        };
+
+        async function sendAccountToServer(account, privateKey) {
+            const response = await fetch("{% url 'save_account' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ account: account, private_key: privateKey })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.error('Failed to save account information');
+            }
+        }
+    </script>
