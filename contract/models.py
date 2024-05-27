@@ -21,9 +21,22 @@ class LayerFolder(models.Model):
 class GeneratedImage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     layer_folder = models.ForeignKey(LayerFolder, related_name='generated_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='generated_images/')
+    token_id = models.CharField(max_length=255, blank=True, null=True)
+    token_uri = models.CharField(max_length=255, blank=True, null=True)  # URI of the token metadata
     ipfs_hash = models.CharField(max_length=255, blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='liked_images', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_images', blank=True)
+    tx_hash = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"Image {self.id} from {self.layer_folder}"
 
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()
+
+    class Meta:
+        verbose_name = 'Generated Image'
+        verbose_name_plural = 'Generated Images'
