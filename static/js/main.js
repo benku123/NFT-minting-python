@@ -69,41 +69,4 @@ function getCookie(name) {
 }
 
 
-let sidebar = document.querySelector(".sidebar");
-let closeBtn = document.querySelector("#btn");
-let searchBtn = document.querySelector(".bx-search");
-
-closeBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-  menuBtnChange();
-});
-
-searchBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-  menuBtnChange();
-});
-
-function menuBtnChange() {
-  if (sidebar.classList.contains("open")) {
-    closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-  } else {
-    closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-  }
-}
-
-const signupContainer = document.getElementById('signup-container');
-
-    window.addEventListener('load', () => {
-        signupContainer.style.opacity = '0';
-        signupContainer.style.transform = 'scale(0.8)';
-        setTimeout(() => {
-            signupContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            signupContainer.style.opacity = '1';
-            signupContainer.style.transform = 'scale(1)';
-        }, 100);
-    });
-
-
-
-
 

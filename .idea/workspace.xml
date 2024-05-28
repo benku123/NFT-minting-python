@@ -5,41 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/contract/contract_abi.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contract/contract_address.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contract/migrations/0007_alter_generatedimage_options_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contract/migrations/0008_generatedimage_dislikes_generatedimage_ipfs_hash_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contract/migrations/0009_generatedimage_tx_hash.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2.url" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2_fLbRO6I.url" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/Counter-Strike_2_obKusir.url" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_19UG3Aw.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_2.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_354OToL.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_65bCteM.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_BpN7Gbs.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_IRlc1qo.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_Ov463TE.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_QsoE65u.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_gDIB7pO.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_zJ3MVKj.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0010_remove_layerfolder_ipfs_image_hash_layerfolder_image.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contract/migrations/0011_remove_layerfolder_image_layerfolder_ipfs_hash.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_3vDWL6x.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_7HvPfe3.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_8oVig9h.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_AQIg5Zp.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_Iaa8Ton.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_SHPCMaj.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_fSMWcz8.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_2_Ikxjuzo.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/layer_folders/layers_2_Z8X2Uix.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/contract_abi.json" beforeDir="false" afterPath="$PROJECT_DIR$/contract/contract_abi.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contract/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contract/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/custom.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/isotope.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/isotope.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/owl-carousel.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/tabs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/assets/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/images/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/folder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/folder.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/images/list_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/list_images.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,6 +91,9 @@
       <recent name="C:\Users\hacker\PycharmProjects\test\templates\images" />
       <recent name="C:\Users\hacker\PycharmProjects\test\templates\registration" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hacker\PycharmProjects\test\contract" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -164,7 +154,11 @@
       <workItem from="1716479179541" duration="907000" />
       <workItem from="1716480323173" duration="1908000" />
       <workItem from="1716492844542" duration="155000" />
-      <workItem from="1716808093043" duration="1488000" />
+      <workItem from="1716808093043" duration="4361000" />
+      <workItem from="1716816011028" duration="398000" />
+      <workItem from="1716817158762" duration="77000" />
+      <workItem from="1716817274535" duration="6945000" />
+      <workItem from="1716899443422" duration="698000" />
     </task>
     <servers />
   </component>

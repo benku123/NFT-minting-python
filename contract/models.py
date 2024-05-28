@@ -13,7 +13,7 @@ class LayerFolder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.FileField(upload_to='layer_folders/')
     name = models.CharField(max_length=100, null=True, blank=True)
-    ipfs_image_hash = models.CharField(max_length=255, blank=True, null=True)
+    ipfs_hash = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s layer folder: {self.name}"

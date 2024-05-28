@@ -6,6 +6,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', signup_view, name='signup'),
     path('api/save_account/', save_account, name='save_account'),
+    path('get_contract_data/', get_contract_data, name='get_contract_data'),
     path('logout/', logout_view, name='logout'),
     path('folders/', list_folders, name='list_folders'),
     path('user/folders/', personal_list_folder, name='personal_list_folder'),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('create/folder', CreatingFolderView.as_view(), name='creating-file-view'),
     path("mint_nfts/<int:pk>", mint_nft, name="mint_nft"),
     path('create/upload/folder/', create_folder, name='create_folder'),
-    path('like/<int:image_id>/', like_image, name='like_image'),
-    path('dislike/<int:image_id>/', dislike_image, name='dislike_image'),
+    path('like_image/<int:image_id>/', like_image, name='like_image'),
+    path('dislike_image/<int:image_id>/', dislike_image, name='dislike_image'),
+    path('delete/<int:folder_id>/', delete_folder, name='delete_folder')
 ]

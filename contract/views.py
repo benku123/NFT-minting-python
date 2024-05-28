@@ -11,7 +11,7 @@ import json
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.http import JsonResponse
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
@@ -34,26 +34,12 @@ def save_account(request):
             profile = ApiProfile.objects.get(eth_address=eth_address)
             login(request, profile.user)
 
-            return HttpResponseRedirect('/')
+            return redirect("home")
         except ApiProfile.DoesNotExist:
             return JsonResponse({"error": "Profile with this Ethereum address does not exist."}, status=404)
     else:
         return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
-
-
-# def get_contract_data(request):
-#     try:
-#         contract_address = os.getenv('CONTRACT_ADDRESS')
-#         app_dir = os.path.dirname(os.path.abspath(__file__))
-#         abi_path = os.path.join(app_dir, 'contract_abi.json')
-#         with open(abi_path) as f:
-#             contract_abi = json.load(f)
-#         return JsonResponse({'address': contract_address, 'abi': contract_abi})
-#     except Exception as e:
-#         print(f"Error getting contract data: {e}")
-#         return JsonResponse({'error': 'Could not retrieve contract data'}, status=500)
 
 
 def mint_nft(request, pk):
@@ -143,7 +129,6 @@ def generate_and_mint_nfts(request):
             layer_folder = form.cleaned_data['layer_folder']
             folder_path = layer_folder.folder.path
 
-
             metadata_hashes = []
 
             for i in range(2):
@@ -231,11 +216,10 @@ def home(request):
     images = GeneratedImage.objects.filter()[:8]
     return render(request, 'images/index.html', {'images': images})
 
-
-
 def list_folders(request):
     folders = LayerFolder.objects.all()
     return render(request, 'images/folder.html', {'folders': folders})
+
 
 @login_required
 def personal_list_folder(request):
@@ -253,28 +237,57 @@ def list_folders_details(request, pk):
 class CreatingFolderView(LoginRequiredMixin, TemplateView):
     template_name = 'images/create_folder.html'
 
+
 @login_required
 def create_folder(request):
     if request.method == 'POST':
         my_file = request.FILES.get("file")
+        if not my_file:
+            return JsonResponse({"error": "No file provided"}, status=400)
+
         folder = LayerFolder.objects.create(user=request.user, folder=my_file, name=my_file.name)
-        folder_path = folder.folder.path
-        generated_image = generate_image_from_zip(folder_path)
 
-        image_io = BytesIO()
+        try:
+            folder_path = folder.folder.path
+            generated_image = generate_image_from_zip(folder_path)
 
-        generated_image.save(image_io, format='PNG')
-        image_io.seek(0)
+            image_io = BytesIO()
+            generated_image.save(image_io, format='PNG')
+            image_io.seek(0)
 
-        files = {'file': ('image.png', image_io, 'image/png')}
-        response = requests.post('http://127.0.0.1:5001/api/v0/add', files=files)
-        response.raise_for_status()
-        ipfs_result = response.json()
-        ipfs_hash = ipfs_result['Hash']
-        folder.ipfs_image_hash = ipfs_hash
-        folder.save()
+            ipfs_image_hash = upload_to_pinata(image_io)
+            folder.ipfs_hash = ipfs_image_hash
+            folder.save()
+        except Exception as e:
+            folder.delete()  # Clean up if there was an error
+            return JsonResponse({"error": str(e)}, status=500)
+
         return redirect('list_folders')
 
     return JsonResponse({"post": "false"})
 
+def get_contract_data(request):
+    try:
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        abi_path = os.path.join(app_dir, 'contract_abi.json')
+        with open(abi_path) as f:
+            contract_abi = json.load(f)
+        contract_address = os.getenv('CONTRACT_ADDRESS')
 
+        if not contract_address:
+            return JsonResponse({'error': 'Contract address not found'}, status=500)
+
+        return JsonResponse({
+            'abi': contract_abi,
+            'address': contract_address
+        })
+
+    except Exception as e:
+        print(f"Error loading contract data: {e}")
+        return JsonResponse({'error': 'Could not load contract data'}, status=500)
+
+def delete_folder(request, folder_id):
+    folder = get_object_or_404(LayerFolder, pk=folder_id)
+    folder.delete()
+    messages.success(request, "The LayerFolder has been deleted")
+    return redirect("list_folders")
