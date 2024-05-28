@@ -223,13 +223,13 @@ def list_folders(request):
 
 @login_required
 def personal_list_folder(request):
-    folders = LayerFolder.objects.filter(user=request.user)
+    folders = LayerFolder.objects.all()
     return render(request, 'images/folder.html', {'folders': folders})
 
 
 @login_required
 def list_folders_details(request, pk):
-    folder = get_object_or_404(LayerFolder, user=request.user, pk=pk)
+    folder = get_object_or_404(LayerFolder, pk=pk)
     images = folder.generated_images.all()
     return render(request, 'images/list_images.html', {'folder': folder, 'images': images})
 
@@ -266,6 +266,7 @@ def create_folder(request):
 
     return JsonResponse({"post": "false"})
 
+
 def get_contract_data(request):
     try:
         app_dir = os.path.dirname(os.path.abspath(__file__))
@@ -291,3 +292,23 @@ def delete_folder(request, folder_id):
     folder.delete()
     messages.success(request, "The LayerFolder has been deleted")
     return redirect("list_folders")
+
+
+
+def update_image(request, image_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            tx_hash = data.get('tx_hash')
+            owner_address = data.get('owner_address')
+            image = GeneratedImage.objects.get(id=image_id)
+            image.user = request.user
+            image.tx_hash = tx_hash
+            image.owner_address = owner_address
+            image.save()
+            return JsonResponse({'status': 'success'})
+        except GeneratedImage.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Image not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

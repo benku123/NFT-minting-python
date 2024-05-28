@@ -17,5 +17,6 @@ urlpatterns = [
     path('create/upload/folder/', create_folder, name='create_folder'),
     path('like_image/<int:image_id>/', like_image, name='like_image'),
     path('dislike_image/<int:image_id>/', dislike_image, name='dislike_image'),
-    path('delete/<int:folder_id>/', delete_folder, name='delete_folder')
+    path('delete/<int:folder_id>/', delete_folder, name='delete_folder'),
+    path('update_image/<int:image_id>/', update_image, name='update_image'),
 ]

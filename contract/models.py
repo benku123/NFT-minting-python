@@ -26,7 +26,8 @@ class GeneratedImage(models.Model):
     ipfs_hash = models.CharField(max_length=255, blank=True, null=True)
     likes = models.ManyToManyField(User, related_name='liked_images', blank=True)
     dislikes = models.ManyToManyField(User, related_name='disliked_images', blank=True)
-    tx_hash = models.CharField(max_length=500, blank=True, null=True)
+    tx_hash = models.CharField(max_length=500, blank=True, null=True)  # Transaction hash for minting/buying NFT
+    owner_address = models.CharField(max_length=255, blank=True, null=True)  # Owner's blockchain address
 
     def __str__(self):
         return f"Image {self.id} from {self.layer_folder}"

