@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/contract/migrations/0012_generatedimage_owner_address.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/layer_folders/Blockchain-Applications-Voting_eS2mjKM.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contract/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contract/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/assets/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/images/list_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/list_images.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -146,6 +140,10 @@
       <workItem from="1716817274535" duration="6945000" />
       <workItem from="1716899443422" duration="3962000" />
       <workItem from="1716907560447" duration="9041000" />
+      <workItem from="1717083745491" duration="1396000" />
+      <workItem from="1717123955419" duration="5000" />
+      <workItem from="1717123983245" duration="110000" />
+      <workItem from="1717249679293" duration="714000" />
     </task>
     <servers />
   </component>

@@ -1,4 +1,4 @@
-git a{% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
     <style>
@@ -253,7 +253,7 @@ git a{% extends 'base.html' %}
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') // Adjust as per your CSRF setup
+                    'X-CSRFToken': getCookie('csrftoken') 
                 },
                 body: JSON.stringify({
                     tx_hash: txHash,
