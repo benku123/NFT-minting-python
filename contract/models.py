@@ -28,6 +28,7 @@ class GeneratedImage(models.Model):
     dislikes = models.ManyToManyField(User, related_name='disliked_images', blank=True)
     tx_hash = models.CharField(max_length=500, blank=True, null=True)  # Transaction hash for minting/buying NFT
     owner_address = models.CharField(max_length=255, blank=True, null=True)  # Owner's blockchain address
+    price = models.DecimalField(max_digits=18, decimal_places=5, null=True, blank=True)  # Price in wei
 
     def __str__(self):
         return f"Image {self.id} from {self.layer_folder}"

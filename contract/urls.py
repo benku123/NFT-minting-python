@@ -18,5 +18,6 @@ urlpatterns = [
     path('like_image/<int:image_id>/', like_image, name='like_image'),
     path('dislike_image/<int:image_id>/', dislike_image, name='dislike_image'),
     path('delete/<int:folder_id>/', delete_folder, name='delete_folder'),
+    path("delete_image/<int:image_id>", delete_image, name="delete_image"),
     path('update_image/<int:image_id>/', update_image, name='update_image'),
 ]

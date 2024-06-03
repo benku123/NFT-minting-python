@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
 
 from .forms import SignUpForm, EmailAuthenticationForm
 
@@ -223,7 +224,7 @@ def list_folders(request):
 
 @login_required
 def personal_list_folder(request):
-    folders = LayerFolder.objects.all()
+    folders = LayerFolder.objects.filter(user=request.user)
     return render(request, 'images/folder.html', {'folders': folders})
 
 
@@ -273,7 +274,7 @@ def get_contract_data(request):
         abi_path = os.path.join(app_dir, 'contract_abi.json')
         with open(abi_path) as f:
             contract_abi = json.load(f)
-        contract_address = os.getenv('CONTRACT_ADDRESS')
+        contract_address = "0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87"
 
         if not contract_address:
             return JsonResponse({'error': 'Contract address not found'}, status=500)
@@ -293,7 +294,12 @@ def delete_folder(request, folder_id):
     messages.success(request, "The LayerFolder has been deleted")
     return redirect("list_folders")
 
-
+def delete_image(request, image_id):
+    image = get_object_or_404(GeneratedImage, pk=image_id)
+    print(image)
+    image.delete()
+    messages.success(request, "The image has been deleted")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def update_image(request, image_id):
     if request.method == 'POST':
@@ -301,10 +307,15 @@ def update_image(request, image_id):
             data = json.loads(request.body)
             tx_hash = data.get('tx_hash')
             owner_address = data.get('owner_address')
+            token_id = data.get('token_id')
+            price = data.get('price')
             image = GeneratedImage.objects.get(id=image_id)
-            image.user = request.user
             image.tx_hash = tx_hash
             image.owner_address = owner_address
+            if token_id:
+                image.token_id = token_id
+            if price:
+                image.price = price
             image.save()
             return JsonResponse({'status': 'success'})
         except GeneratedImage.DoesNotExist:
