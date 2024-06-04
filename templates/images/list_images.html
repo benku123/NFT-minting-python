@@ -74,6 +74,7 @@
                                         <b style="color: green">on sale</b>
                                         {% endif %}
                                         <h4>Image Information</h4>
+                                    
                                         <div class="actions" style="right: 10px; bottom: 10px;">
                                             <a href="javascript:void(0);" class="like-button" id="like-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
                                                 <i class="fa-solid fa-thumbs-up"></i>
@@ -114,9 +115,8 @@ async function connectMetaMask() {
     if (window.ethereum) {
         web3 = new Web3(window.ethereum);
         try {
-            // Request accounts from MetaMask
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAddress = accounts[0];  // Get the first account in the array
+            userAddress = accounts[0];
             console.log('Connected to MetaMask with address:', userAddress);
         } catch (error) {
             console.error('Error connecting to MetaMask:', error);
@@ -126,85 +126,58 @@ async function connectMetaMask() {
     }
 }
 
-
 async function fetchContractData() {
     try {
         const response = await fetch('/get_contract_data/');
-        return await response.json();
+        const data = await response.json();
+        if (!data.abi || !data.address) {
+            throw new Error('Invalid contract data');
+        }
+        return data;
     } catch (error) {
         console.error('Error fetching contract data:', error);
         throw error;
     }
 }
 
-
-async function mintNFT(ipfsHash, contract, imageId, price) {
-    console.log('Starting the mintNFT function');
+async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
     try {
-        // Check if userAddress is defined
         if (!userAddress) {
-            console.error('User address is not defined. Please connect to MetaMask.');
             throw new Error('User address is not defined. Please connect to MetaMask.');
         }
-        console.log('User address:', userAddress);
-
-        // Check if ipfsHash is valid
         if (!ipfsHash || typeof ipfsHash !== 'string' || ipfsHash.length === 0) {
-            console.error('Invalid IPFS hash provided.');
             throw new Error('Invalid IPFS hash provided.');
         }
-
-        // Check if price is valid
-        if (!price || isNaN(price) || price <= 0) {
-            console.error('Price must be set and greater than zero.');
+        if (!priceInWei || isNaN(priceInWei) || priceInWei <= 0) {
             throw new Error('Price must be set and greater than zero.');
         }
 
-        console.log('IPFS hash:', ipfsHash);
-        console.log('Price (in Ether):', price);
-
-        // Convert price to Wei
-        const priceInWei = web3.utils.toWei(price.toString(), 'ether');
-        console.log('Price in Wei:', priceInWei);
-
-        // Prepare to call the smart contract method and estimate gas
-        console.log('Preparing to estimate gas');
         const gasEstimate = await contract.methods.createCollectable(`ipfs://${ipfsHash}`, priceInWei).estimateGas({ from: userAddress });
-        console.log('Gas estimate:', gasEstimate);
 
-        // Construct the transaction object
         const options = {
             from: userAddress,
-            gas: web3.utils.toHex(gasEstimate) + 1,
+            gas: web3.utils.toHex(gasEstimate),
             gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
         };
-        console.log('Transaction options:', options);
 
-        // Send the transaction
-        console.log('Sending transaction');
         const transaction = await contract.methods.createCollectable(`ipfs://${ipfsHash}`, priceInWei).send(options);
-        console.log('Transaction hash:', transaction.transactionHash);
         alert(`Transaction sent: ${transaction.transactionHash}`);
 
-        // Wait for the transaction to be confirmed and get the receipt
         const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
         if (receipt && receipt.status) {
             console.log('Transaction successful with receipt:', receipt);
-            console.log('Event logs:', receipt.logs);
-
-            // Check for the CollectableCreated event in the receipt logs
-            const collectableCreatedEvent = receipt.logs.find(log => log.topics[0] === web3.utils.sha3('CollectableCreated(uint256,string,address,uint256)'));
+            const eventSignature = web3.utils.sha3('CollectableCreated(uint256,string,address,uint256)');
+            const collectableCreatedEvent = receipt.logs.find(log => log.topics[0] === eventSignature);
             if (collectableCreatedEvent) {
                 const tokenId = web3.eth.abi.decodeParameter('uint256', collectableCreatedEvent.topics[1]);
-                console.log('Token ID:', tokenId);
-                await updateTransactionHash(imageId, transaction.transactionHash, userAddress, tokenId, priceInWei);
-                console.log('Transaction hash updated successfully');
+                // Convert priceInWei back to Ether for consistency in updateTransactionHash
+                const priceInEther = web3.utils.fromWei(priceInWei, 'ether');
+                await updateTransactionHash(imageId, transaction.transactionHash, userAddress, tokenId, priceInEther);
             } else {
                 console.warn('CollectableCreated event not found in receipt:', receipt);
             }
             return receipt;
         } else {
-            console.error('Transaction failed. Receipt:', receipt);
             throw new Error('Transaction failed with no success status.');
         }
     } catch (error) {
@@ -213,24 +186,17 @@ async function mintNFT(ipfsHash, contract, imageId, price) {
     }
 }
 
-
-
-
 async function handleMintNFT(ipfsHash, imageId, price) {
-    console.log('handleMintNFT called with:', { ipfsHash, imageId, price });
     if (!web3 || !userAddress) {
         alert('Connect with MetaMask first');
         return;
     }
 
-    console.log('Attempting to fetch contract data...');
     try {
         const data = await fetchContractData();
+        console.log('Fetched contract data:', data); // Debugging line to check data
         const contract = new web3.eth.Contract(data.abi, data.address);
         const priceInWei = web3.utils.toWei(price.toString(), 'ether');
-        console.log('Price in Wei:', priceInWei);
-
-        console.log('Minting NFT with IPFS hash:', ipfsHash);
         await mintNFT(ipfsHash, contract, imageId, priceInWei);
     } catch (error) {
         console.error('Error during handleMintNFT:', error);
@@ -238,23 +204,78 @@ async function handleMintNFT(ipfsHash, imageId, price) {
     }
 }
 
+async function buyNFT(ipfsHash, contract, imageId, priceInWei) {
+    try {
+        if (!userAddress) {
+            throw new Error('User address is not defined. Please connect to MetaMask.');
+        }
+
+        const gasEstimate = await contract.methods.purchaseCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress, value: priceInWei });
+
+        const options = {
+            from: userAddress,
+            gas: web3.utils.toHex(gasEstimate),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+            value: priceInWei
+        };
+
+        const transaction = await contract.methods.purchaseCollectable(`ipfs://${ipfsHash}`).send(options);
+        alert(`Transaction sent: ${transaction.transactionHash}`);
+
+        const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
+        if (receipt && receipt.status) {
+            console.log('Transaction successful with receipt:', receipt);
+            await updateTransactionHash(imageId, transaction.transactionHash, userAddress, null, web3.utils.fromWei(priceInWei, 'ether'));
+            return receipt;
+        } else {
+            throw new Error('Transaction failed with no success status.');
+        }
+    } catch (error) {
+        console.error('Error buying NFT:', error);
+        alert(`Error buying NFT: ${error.message || JSON.stringify(error)}`);
+    }
+}
+
+async function handleBuyNFT(ipfsHash, imageId, price) {
+    if (!web3 || !userAddress) {
+        alert('Connect with MetaMask first');
+        return;
+    }
+
+    try {
+        const data = await fetchContractData();
+        console.log('Fetched contract data:', data); // Debugging line to check data
+        const contract = new web3.eth.Contract(data.abi, data.address);
+        const priceInWei = web3.utils.toWei(price.toString(), 'ether');
+        await buyNFT(ipfsHash, contract, imageId, priceInWei);
+    } catch (error) {
+        console.error('Error during handleBuyNFT:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
 async function updateTransactionHash(imageId, txHash, ownerAddress, tokenId, price) {
     try {
+        const data = {
+            tx_hash: txHash,
+            owner_address: ownerAddress,
+            token_id: tokenId,
+            price: price // Send price in Ether
+        };
+        console.log("Data being sent:", data);  // Add this line to debug the data being sent
+
         const response = await fetch(`/update_image/${imageId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken')
             },
-            body: JSON.stringify({
-                tx_hash: txHash,
-                owner_address: ownerAddress,
-                token_id: tokenId,
-                price: price
-            })
+            body: JSON.stringify(data)
         });
         if (!response.ok) {
             throw new Error('Failed to update transaction hash');
+        } else {
+            console.log('Transaction hash updated successfully');
         }
     } catch (error) {
         console.error('Error updating transaction hash:', error);
@@ -264,7 +285,6 @@ async function updateTransactionHash(imageId, txHash, ownerAddress, tokenId, pri
 
 $(document).ready(function () {
     $('.like-button').click(function () {
-        console.log("Like button clicked");
         var image_id = $(this).data('id');
         $.ajax({
             url: '/like_image/' + image_id + '/',
@@ -287,7 +307,6 @@ $(document).ready(function () {
     });
 
     $('.dislike-button').click(function () {
-        console.log("Dislike button clicked");
         var image_id = $(this).data('id');
         $.ajax({
             url: '/dislike_image/' + image_id + '/',
@@ -308,9 +327,25 @@ $(document).ready(function () {
             }
         });
     });
-});
 
     connectMetaMask();
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 </script>
 
 

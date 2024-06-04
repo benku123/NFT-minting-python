@@ -27,19 +27,26 @@ load_dotenv()
 
 def save_account(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        eth_address = data.get('account')
-        request.session['eth_address'] = eth_address
-
         try:
-            profile = ApiProfile.objects.get(eth_address=eth_address)
-            login(request, profile.user)
+            data = json.loads(request.body)
+            eth_address = data.get('account')
+            if not eth_address:
+                return JsonResponse({"error": "Ethereum address is required."}, status=400)
 
-            return redirect("home")
-        except ApiProfile.DoesNotExist:
-            return JsonResponse({"error": "Profile with this Ethereum address does not exist."}, status=404)
+            request.session['eth_address'] = eth_address
+
+            try:
+                profile = ApiProfile.objects.get(eth_address=eth_address)
+                login(request, profile.user)
+                return JsonResponse({"success": "Logged in successfully."})
+            except ApiProfile.DoesNotExist:
+                return JsonResponse({"error": "Profile with this Ethereum address does not exist."}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON."}, status=400)
     else:
         return JsonResponse({"error": "Invalid request method."}, status=405)
+
 
 
 
@@ -274,7 +281,7 @@ def get_contract_data(request):
         abi_path = os.path.join(app_dir, 'contract_abi.json')
         with open(abi_path) as f:
             contract_abi = json.load(f)
-        contract_address = "0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87"
+        contract_address = "0xDb2Bd1b389A814d59bd21f43638eF43B674eEd8A"
 
         if not contract_address:
             return JsonResponse({'error': 'Contract address not found'}, status=500)
@@ -300,26 +307,33 @@ def delete_image(request, image_id):
     image.delete()
     messages.success(request, "The image has been deleted")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 def update_image(request, image_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print("Parsed JSON data:", data)
+
             tx_hash = data.get('tx_hash')
             owner_address = data.get('owner_address')
             token_id = data.get('token_id')
-            price = data.get('price')
+            price_ether = data.get('price')
+
+            print(f"Updating image with id: {image_id}")
             image = GeneratedImage.objects.get(id=image_id)
             image.tx_hash = tx_hash
             image.owner_address = owner_address
+            image.price = price_ether
+            print(price_ether)
             if token_id:
                 image.token_id = token_id
-            if price:
-                image.price = price
+
             image.save()
             return JsonResponse({'status': 'success'})
         except GeneratedImage.DoesNotExist:
+            print("Error: Image not found")
             return JsonResponse({'status': 'error', 'message': 'Image not found'}, status=404)
         except Exception as e:
+            print(f"Error: {e}")
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
