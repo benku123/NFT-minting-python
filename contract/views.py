@@ -343,4 +343,21 @@ def update_image(request, image_id):
 @login_required
 def profile(request):
     profile = ApiProfile.objects.get(user=request.user)
-    return render(request, 'registration/profile.html', {'profile': profile})
+    bought = GeneratedImage.objects.filter(user=request.user, tx_hash__isnull=False).count()
+    sell = GeneratedImage.objects.exclude(user=request.user).filter(tx_hash__isnull=False).count()
+
+    filter_images = request.GET.get('filter_image', "bought")
+    print(filter_images)
+
+    if filter_images == "sale":
+        images = GeneratedImage.objects.exclude(user=request.user).filter(tx_hash__isnull=False)
+        name = "On Sale"
+    else:
+        images = GeneratedImage.objects.filter(user=request.user, tx_hash__isnull=False)
+        name = "Owned NFT"
+    print(images)
+    return render(request, 'registration/profile.html', {'profile': profile,
+                                                         "bought": bought,
+                                                         "sell": sell,
+                                                         "images": images,
+                                                         "filter_name": name})

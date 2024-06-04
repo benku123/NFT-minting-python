@@ -109,19 +109,19 @@
                             </div>
                         </li>
                         <li><a href="{% url 'personal_list_folder' %}">Our Layers</a></li>
-                      <li>
-                        <a href="{% url 'profile' %}">
-                            {% if request.user.api_profile.profile_image %}
-                                <img src="{{ request.user.api_profile.profile_image.url }}" alt="{{ request.user.username }}" style="height: 30px; width: 30px; border-radius: 50%;">
-                            {% else %}
-                                <img src="https://via.placeholder.com/30" alt="{{ request.user.username }}" style="height: 30px; width: 30px; border-radius: 50%;">
-                            {% endif %}
-                            {{ request.user }}
-                        </a>
-                    </li>
                         
                         
                         {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'profile' %}">
+                                    {% if request.user.api_profile.profile_image %}
+                                        <img src="{{ request.user.api_profile.profile_image.url }}" alt="{{ request.user.username }}" style="height: 30px; width: 30px; border-radius: 50%;">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/30" alt="{{ request.user.username }}" style="height: 30px; width: 30px; border-radius: 50%;">
+                                    {% endif %}
+                                    {{ request.user }}
+                                </a>
+                            </li>
                             <li><a href="{% url 'logout' %}">Logout</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Login</a></li>

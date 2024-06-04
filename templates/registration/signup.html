@@ -18,14 +18,16 @@
         }
 
 
-
+        label {
+        color: white;
+    }
 
         .signup-container {
             background: rgba(0, 0, 0, 0.6); 
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(135, 117, 138, 0.2), 0 0 10px rgba(135, 117, 138, 0.1) inset;
-            width: 300px;
+            width: 400px;
             text-align: center;
 }
 
@@ -72,6 +74,10 @@
         .signup-form button:hover {
             background: #604f63; /* Use #604f63 as the button background color on hover */
         }
+        .error {
+            color: red;
+        }
+
 
         .login-button {
             padding: 10px;
@@ -118,19 +124,36 @@
 
 
     <div class="signup-container" id="signup-container">
-        <h2>Signup</h2>
-        <form class="signup-form" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+    <h2>Signup</h2>
+    <form class="signup-form" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="error" style="color: red;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error" style="color: red;">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit">Signup</button>
+    </form>
+
+    <p class="or">
+        OR
+    </p>
     
-            <button type="submit">Signup</button>
-        </form>
-    
-        <p class="or">
-            OR
-        </p>
-        
     <a class="login-button" href="{% url 'login' %}">Login</a>
 </div>
+
+    
+    
 
 {% endblock %}

@@ -72,3 +72,34 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+function openModal(imageId) {
+    var modal = document.getElementById('myModal-' + imageId);
+    var img = document.getElementById('myImg-' + imageId);
+    var modalImg = document.getElementById('img01-' + imageId);
+    modal.style.display = "block";
+    modalImg.src = img.src;
+    document.querySelector('.row').classList.add('blurred');
+}
+
+
+var modals = document.querySelectorAll('.modal');
+modals.forEach(modal => {
+    var span = modal.querySelector('.close');
+    if (span) {
+        span.onclick = function() {
+            modal.style.display = "none";
+            document.querySelector('.row').classList.remove('blurred');
+        }
+    }
+});
+
+
+window.onclick = function(event) {
+    modals.forEach(modal => {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            document.querySelector('.row').classList.remove('blurred');
+        }
+    });
+}

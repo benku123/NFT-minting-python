@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/templates/images/on_sale.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contract/contract_abi.json" beforeDir="false" afterPath="$PROJECT_DIR$/contract/contract_abi.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/assets/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/images/list_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/list_images.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/registration/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/registration/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/signup.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +28,8 @@
       <list>
         <option value="CSS File" />
         <option value="JavaScript File" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -163,6 +167,8 @@
       <workItem from="1717460001301" duration="1160000" />
       <workItem from="1717471876929" duration="322000" />
       <workItem from="1717473106663" duration="615000" />
+      <workItem from="1717506308506" duration="2430000" />
+      <workItem from="1717523172810" duration="3660000" />
     </task>
     <servers />
   </component>
