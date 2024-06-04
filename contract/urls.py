@@ -4,6 +4,7 @@ from contract.views import *
 urlpatterns = [
     path('', home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path("profile/", profile, name='profile'),
     path('signup/', signup_view, name='signup'),
     path('api/save_account/', save_account, name='save_account'),
     path('get_contract_data/', get_contract_data, name='get_contract_data'),

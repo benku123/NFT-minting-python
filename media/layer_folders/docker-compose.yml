@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:6.0.9-alpine
+    container_name: redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+
+  payment:
+    image: ${image}
+    container_name: payment
+    env_file:
+      - .env
+    environment:
+      - HOST=0.0.0.0
+    ports:
+      - "8000:8000"
+    links:
+      - redis
+    depends_on:
+      - redis
+    restart: always
+    volumes:
+      - "./config:/opt/app/config"
+      - "./logs:/opt/app/payments/logs"
+
+  worker:
+    image: ${image}
+    container_name: worker
+    command: make run_worker
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - redis
+      - payment
+    restart: always
+    volumes:
+      - "./config:/opt/app/config"
+      - "./worker-logs:/app/payments/logs"
+      - "./payment/celery:/app/payments/celery"
+
+  beat:
+    image: ${image}
+    container_name: beat
+    command: make run_beat
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - redis
+      - payment
+    restart: always
+    volumes:
+      - "./config:/opt/app/config"
+      - "./beat-logs:/app/payments/logs"
+      - "./payment/celery:/app/payments/celery"
+
+  flower:
+    image: ${image}
+    container_name: flower
+    command: make run_flower
+    env_file:
+      - .env
+    ports:
+      - "15555:5555"
+    links:
+      - redis
+    depends_on:
+      - redis
+      - payment
+      - worker
+      - beat
+    restart: always
+    volumes:
+      - "./config:/opt/app/config"
+      - "./flower-logs:/app/payments/logs"
+      - "./payment/celery:/app/payments/celery"
+
+
+
+networks:
+  payment:
+    driver: bridge

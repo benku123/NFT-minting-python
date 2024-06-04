@@ -67,7 +67,7 @@
                                         {% if image.user == request.user and not image.tx_hash %}
                                         <button onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">Mint NFT</button>
                                         {% elif image.tx_hash and image.user != request.user %}
-                                        <button onclick="handleBuyNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">Buy NFT</button>
+                                        <button onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})">Buy NFT</button>
                                         {% elif not image.tx_hash and image.user != request.user %}
                                         <b style="color: orange">Pending!</b>
                                         {% else %}
@@ -156,7 +156,7 @@ async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
 
         const options = {
             from: userAddress,
-            gas: web3.utils.toHex(gasEstimate),
+            gas: web3.utils.toHex(gasEstimate) + 1,
             gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
         };
 
@@ -204,13 +204,13 @@ async function handleMintNFT(ipfsHash, imageId, price) {
     }
 }
 
-async function buyNFT(ipfsHash, contract, imageId, priceInWei) {
+async function buyNFT(tokenId, contract, imageId, priceInWei) {
     try {
         if (!userAddress) {
             throw new Error('User address is not defined. Please connect to MetaMask.');
         }
 
-        const gasEstimate = await contract.methods.purchaseCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress, value: priceInWei });
+        const gasEstimate = await contract.methods.purchaseCollectable(tokenId).estimateGas({ from: userAddress, value: priceInWei });
 
         const options = {
             from: userAddress,
@@ -219,13 +219,13 @@ async function buyNFT(ipfsHash, contract, imageId, priceInWei) {
             value: priceInWei
         };
 
-        const transaction = await contract.methods.purchaseCollectable(`ipfs://${ipfsHash}`).send(options);
+        const transaction = await contract.methods.purchaseCollectable(tokenId).send(options);
         alert(`Transaction sent: ${transaction.transactionHash}`);
 
         const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
         if (receipt && receipt.status) {
             console.log('Transaction successful with receipt:', receipt);
-            await updateTransactionHash(imageId, transaction.transactionHash, userAddress, null, web3.utils.fromWei(priceInWei, 'ether'));
+            await updateTransactionHash(imageId, transaction.transactionHash, userAddress, tokenId, web3.utils.fromWei(priceInWei, 'ether'));
             return receipt;
         } else {
             throw new Error('Transaction failed with no success status.');
@@ -236,7 +236,7 @@ async function buyNFT(ipfsHash, contract, imageId, priceInWei) {
     }
 }
 
-async function handleBuyNFT(ipfsHash, imageId, price) {
+async function handleBuyNFT(tokenId, imageId) {
     if (!web3 || !userAddress) {
         alert('Connect with MetaMask first');
         return;
@@ -246,8 +246,11 @@ async function handleBuyNFT(ipfsHash, imageId, price) {
         const data = await fetchContractData();
         console.log('Fetched contract data:', data); // Debugging line to check data
         const contract = new web3.eth.Contract(data.abi, data.address);
-        const priceInWei = web3.utils.toWei(price.toString(), 'ether');
-        await buyNFT(ipfsHash, contract, imageId, priceInWei);
+        
+        // Fetch the price in Wei for the given tokenId
+        const priceInWei = await contract.methods.tokenPrices(tokenId).call();
+        
+        await buyNFT(tokenId, contract, imageId, priceInWei);
     } catch (error) {
         console.error('Error during handleBuyNFT:', error);
         alert(`Error: ${error.message}`);
@@ -281,7 +284,6 @@ async function updateTransactionHash(imageId, txHash, ownerAddress, tokenId, pri
         console.error('Error updating transaction hash:', error);
     }
 }
-
 
 $(document).ready(function () {
     $('.like-button').click(function () {
@@ -347,6 +349,5 @@ function getCookie(name) {
 }
 
 </script>
-
 
 {% endblock %}

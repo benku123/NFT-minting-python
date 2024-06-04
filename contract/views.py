@@ -281,7 +281,7 @@ def get_contract_data(request):
         abi_path = os.path.join(app_dir, 'contract_abi.json')
         with open(abi_path) as f:
             contract_abi = json.load(f)
-        contract_address = "0xDb2Bd1b389A814d59bd21f43638eF43B674eEd8A"
+        contract_address = "0xf808Fc7c5483Da441eC5965648153642414cF898"
 
         if not contract_address:
             return JsonResponse({'error': 'Contract address not found'}, status=500)
@@ -322,6 +322,7 @@ def update_image(request, image_id):
             print(f"Updating image with id: {image_id}")
             image = GeneratedImage.objects.get(id=image_id)
             image.tx_hash = tx_hash
+            image.user = request.user
             image.owner_address = owner_address
             image.price = price_ether
             print(price_ether)
@@ -337,3 +338,9 @@ def update_image(request, image_id):
             print(f"Error: {e}")
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+@login_required
+def profile(request):
+    profile = ApiProfile.objects.get(user=request.user)
+    return render(request, 'registration/profile.html', {'profile': profile})
