@@ -1,5 +1,5 @@
 const inputs = document.querySelectorAll(".input");
-
+import Swal from 'sweetalert2';
 
 function addcl(){
 	let parent = this.parentNode.parentNode;
@@ -41,19 +41,19 @@ if (typeof window.ethereum !== 'undefined') {
 //     }
 // }
 
-// function sendAccountToServer(account) {
-//     fetch('/api/save_account/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': getCookie('csrftoken'),
-//         },
-//         body: JSON.stringify({ account: account })
-//     })
-//     .then(response => response.json())
-//     .then(data => console.log('Success:', data))
-//     .catch((error) => console.error('Error:', error));
-// }
+function sendAccountToServer(account) {
+    fetch('/api/save_account/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ account: account })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
 
 
 
@@ -103,3 +103,26 @@ window.onclick = function(event) {
         }
     });
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var modals = document.querySelectorAll('.modal');
+    var images = document.querySelectorAll('.modal-content');
+
+    images.forEach(function(image) {
+        image.addEventListener('click', function(event) {
+            var modal = document.getElementById('myModal-' + image.id.split('-')[1]);
+            modal.style.display = 'block';
+            document.body.style.filter = 'blur(5px)';
+        });
+    });
+
+    modals.forEach(function(modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.filter = 'none';
+            }
+        });
+    });
+});

@@ -86,12 +86,7 @@
                     </g>
                     </svg>
                     </a>
-                    <div class="search-input">
-                      <form id="search" action="#">
-                        <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
-                        <i class="fa fa-search"></i>
-                      </form>
-                    </div>
+                  
 
                     <ul class="nav">
                         <li><a href="{% url 'home' %}" class="active">Home</a></li>
@@ -109,7 +104,18 @@
                             </div>
                         </li>
                         <li><a href="{% url 'personal_list_folder' %}">Our Layers</a></li>
-                        
+                  
+                            <li class="nav-item dropdown">
+                              <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                              </ul>
+                            </li>
+                         
                         
                         {% if user.is_authenticated %}
                             <li>

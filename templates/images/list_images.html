@@ -111,6 +111,7 @@
 let web3;
 let userAddress;
 
+
 async function connectMetaMask() {
     if (window.ethereum) {
         web3 = new Web3(window.ethereum);
@@ -118,6 +119,7 @@ async function connectMetaMask() {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             userAddress = accounts[0];
             console.log('Connected to MetaMask with address:', userAddress);
+            sendAccountToServer(account);
         } catch (error) {
             console.error('Error connecting to MetaMask:', error);
         }
@@ -161,7 +163,12 @@ async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
         };
 
         const transaction = await contract.methods.createCollectable(`ipfs://${ipfsHash}`, priceInWei).send(options);
-        alert(`Transaction sent: ${transaction.transactionHash}`);
+        Swal.fire({
+              title: 'Transaction Sent!',
+              text: `Transaction sent: ${transaction.transactionHash}`,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
 
         const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
         if (receipt && receipt.status) {
@@ -220,7 +227,13 @@ async function buyNFT(tokenId, contract, imageId, priceInWei) {
         };
 
         const transaction = await contract.methods.purchaseCollectable(tokenId).send(options);
-        alert(`Transaction sent: ${transaction.transactionHash}`);
+        Swal.fire({
+              title: 'Transaction Sent!',
+              text: `Transaction sent: ${transaction.transactionHash}`,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+
 
         const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
         if (receipt && receipt.status) {

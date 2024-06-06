@@ -139,7 +139,7 @@ def generate_and_mint_nfts(request):
 
             metadata_hashes = []
 
-            for i in range(2):
+            for i in range(20):
                 generated_image = generate_image_from_zip(folder_path)
                 if generated_image:
                     try:
