@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class ApiProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="api_profile")
     eth_address = models.CharField(max_length=42)
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', default='image/user.png', null=True, blank=True)
     location = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):

@@ -119,7 +119,7 @@ async function connectMetaMask() {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             userAddress = accounts[0];
             console.log('Connected to MetaMask with address:', userAddress);
-            sendAccountToServer(account);
+            sendAccountToServer(userAddress);
         } catch (error) {
             console.error('Error connecting to MetaMask:', error);
         }
@@ -278,7 +278,7 @@ async function updateTransactionHash(imageId, txHash, ownerAddress, tokenId, pri
             token_id: tokenId,
             price: price // Send price in Ether
         };
-        console.log("Data being sent:", data);  // Add this line to debug the data being sent
+        console.log("Data being sent:", data);  
 
         const response = await fetch(`/update_image/${imageId}/`, {
             method: 'POST',
@@ -359,6 +359,20 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function sendAccountToServer(account) {
+    fetch('/api/save_account/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ account: account })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
 }
 
 

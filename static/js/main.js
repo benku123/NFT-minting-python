@@ -41,20 +41,6 @@ if (typeof window.ethereum !== 'undefined') {
 //     }
 // }
 
-function sendAccountToServer(account) {
-    fetch('/api/save_account/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({ account: account })
-    })
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
-    .catch((error) => console.error('Error:', error));
-}
-
 
 
 function getCookie(name) {
