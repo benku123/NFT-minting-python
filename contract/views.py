@@ -372,3 +372,10 @@ def profile(request):
                                                          "sell": sell,
                                                          "images": images,
                                                          "filter_name": name})
+
+
+def about_us(request):
+    return render(request, "about_us.html")
+
+def facts(request):
+    return render(request, "facts.html")
