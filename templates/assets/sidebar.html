@@ -1,90 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
+
     <style>
       body {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-      .sidebar {
-        background: linear-gradient(to bottom, #383940, #25272e);
-        color: #fff;
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: -250px;
-        transition: all 0.3s ease;
-        padding-top: 60px;
-        overflow-y: auto;
-      }
+      
 
-      .sidebar.show {
-        left: 0;
-      }
-
-      .sidebar-header {
-        padding: 20px;
-        text-align: center;
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-
-      .sidebar ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .sidebar ul li {
-        padding: 10px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-      }
-
-      .sidebar ul li:hover {
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-
-      .sidebar ul li:last-child {
-        border-bottom: none;
-      }
-      .sidebar ul li a:hover {
-        color: #38f2af;
-      }
-
-      .toggle-btn {
-        position: fixed;
-        top: 65px;
-        margin-left: 20px;
-        cursor: pointer;
-        z-index: 999;
-      }
-
-      .toggle-icon {
-        width: 30px;
-        height: 30px;
-        background-color: #567f70;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .toggle-icon:before {
-        content: '\2630'; /* Unicode character for hamburger icon */
-        font-size: 25px;
-        color: #fff;
-      }
-      .side-ul {
-        display: flex;
-        flex-direction: column;
-      }
     </style>
     <div class="sidebar" id="sidebar">
       <div class="sidebar-header">
@@ -97,13 +19,14 @@
         <li><a href="{% url "list_folders" %}">All Layers</a></li>
         <li><a href="{% url "profile" %}?filter_image=bought">Bought NFT</a></li>
         <li><a href="{% url "profile" %}?filter_image=sale">On Sale NFT</a></li>
-          <li>
-          <ul>
-              <li>
-                  
-              </li>
-          </ul>
-          </li>
+        <li>
+        Miting
+        <ul class="dropdown">
+                  <li><a href="{% url 'create_folder' %}" >Create Folder</a></li>
+        <li><a href="{% url "generate_and_mint_nfts"%}">Mint NFT</a></li>
+        </ul>
+    </li>
+
       </ul>
     </div>
 
@@ -117,5 +40,3 @@
         sidebar.classList.toggle('show');
       }
     </script>
-  </body>
-</html>
