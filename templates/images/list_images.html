@@ -118,9 +118,28 @@
     outline-color: white;
   }
 }
+.like-button {
+    width: 20px;
+    height: 20px;
+}
 
+.dislike-button:hover {
+  color: red;
+    width: 20px;
+    height: 20px;
+}
 </style>
 <div class="container">
+  {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
   <section class="crd-cont">
     {% if images %}
     <div class="row">
@@ -128,14 +147,17 @@
       <div class="col-md-4 mb-4">
         <div class="crd">
           <div class="crd-top">
-            <img
-              src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
-              alt="Generated Image"
+            <img id="triggerModal-{{ image.id }}"
+                src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+                alt="Generated Image"
+                data-image-url="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+                data-image-id="{{ image.id }}"
+                style="width: 100%; max-width: 300px; cursor: pointer;"
             />
           </div>
           <div class="crd-bottom">
             <div class="bottom-t">
-              <h3 style="color: #38f2af">Mirror Class Effect</h3>
+              <h3 style="color: #38f2af">{{ image.layer_folder.name }}</h3>
               <p>Pixart motion</p>
             </div>
             <div class="bottom-b">
@@ -164,7 +186,7 @@
                     </div>
                 </button>
             {% elif not image.tx_hash and image.user != request.user %}
-            <button type="button" class="btn btn-warning">Warning</button>
+            <button type="button" class="btn btn-warning">Pending</button>
             {% else %}
             <button type="button" class="btn btn-success">Owned</button>
             {% endif %}
@@ -175,38 +197,38 @@
                 class="like-button"
                 id="like-button-{{ image.id }}"
                 data-id="{{ image.id }}"
-                style="width: 20px"
+                style="width: 40px; height: 40px"
               >
                 <i class="fa-solid fa-thumbs-up"></i>
               </a>
-              <span id="like-count-{{ image.id }}"
-                >{{ image.total_likes }}</span
-              >
+              <span style="color: white" id="like-count-{{ image.id }}"
+                >{{ image.total_likes }}</span>
               <a
                 href="javascript:void(0);"
                 class="dislike-button"
                 id="dislike-button-{{ image.id }}"
                 data-id="{{ image.id }}"
-                style="width: 20px"
+                style="width: 40px; height: 40px"
               >
                 <i class="fa-solid fa-thumbs-down"></i>
               </a>
-              <span id="dislike-count-{{ image.id }}"
+              <span style="color: white" id="dislike-count-{{ image.id }}"
                 >{{ image.total_dislikes }}</span
               >
             </div>
           </div>
         </div>
       </div>
-      <div id="myModal-{{ image.id }}" class="modal">
-          <img class="modal-content" id="img01-{{ image.id }}" src="{{ image.url }}" />
-          <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
+      <div id="myModal-{{ image.id }}" class="modal" data-image-id="{{ image.id }}">
+        <span class="close" id="close-{{ image.id }}">&times;</span>
+        <img class="modal-content" id="img01-{{ image.id }}" src="" />
+        <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">
-              <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-trash"></i>
             </button>
-          </form>
-        </div>
+        </form>
+    </div>
 
       {% endfor %}
     </div>
@@ -500,8 +522,51 @@
         },
       });
     });
-
+    
+    
     connectMetaMask();
+      var modal = $(".modal");
+    var modalImg = $(".modal-content");
+    var closeBtn = $(".close");
+
+    console.log("Modal elements assigned");
+
+    $("img").click(function() {
+        var img = $(this);
+        var imageUrl = img.data("image-url");
+        var imageId = img.data("image-id");
+
+        console.log("Image clicked", imageId, imageUrl);
+
+        $.ajax({
+            url: imageUrl, // Use the image URL from the data attribute
+            type: "GET",
+            success: function(data) {
+                console.log("AJAX request successful");
+                modalImg.attr("src", imageUrl);
+                modal.filter('[data-image-id="' + imageId + '"]').show();
+                $("body").addClass("modal-open");
+            },
+            error: function() {
+                console.error("Image could not be loaded.");
+            }
+        });
+    });
+
+    closeBtn.click(function() {
+        console.log("Close button clicked");
+        modal.hide();
+        $("body").removeClass("modal-open");
+    });
+
+    $(window).click(function(event) {
+        if ($(event.target).is(modal)) {
+            console.log("Click outside modal detected");
+            modal.hide();
+            $("body").removeClass("modal-open");
+        }
+    });
+
   });
 
   function getCookie(name) {

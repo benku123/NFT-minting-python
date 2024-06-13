@@ -7,7 +7,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 
 from .forms import SignUpForm, EmailAuthenticationForm
-
+from django.contrib import messages
 import json
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
@@ -35,7 +35,7 @@ def save_account(request):
 
             # Check if the eth_address already has an ApiProfile
             try:
-                profile = ApiProfile.objects.get(eth_address=eth_address)
+                profile = ApiProfile.objects.filter(eth_address=eth_address).first()
                 login(request, profile.user)
                 return JsonResponse({"success": "Logged in successfully."})
             except ApiProfile.DoesNotExist:
@@ -210,7 +210,7 @@ def signup_view(request):
             user.email = form.cleaned_data.get('email')
             user.save()
             raw_password = form.cleaned_data.get('password1')
-            profile_image = request.FILES['profile_image'] if 'profile_image' in request.FILES else None
+            profile_image = request.FILES['profile_image'] if 'profile_image' in request.FILES else "image/user.png"
             ApiProfile.objects.create(user=user, profile_image=profile_image)
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
