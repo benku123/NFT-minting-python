@@ -210,6 +210,8 @@ def signup_view(request):
             user.email = form.cleaned_data.get('email')
             user.save()
             raw_password = form.cleaned_data.get('password1')
+            profile_image = request.FILES['profile_image'] if 'profile_image' in request.FILES else None
+            ApiProfile.objects.create(user=user, profile_image=profile_image)
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('home')

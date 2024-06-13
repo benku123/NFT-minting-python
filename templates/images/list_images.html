@@ -1,6 +1,8 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <style>
-  * {
+    * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -8,31 +10,7 @@
   .container {
     position: relative;
   }
-
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(5px);
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-content {
-    max-width: 100%;
-    max-height: 100%;
-    margin: auto;
-    display: block;
-    width: auto;
-    height: auto;
-    animation: zoomIn 3s;
-  }
+  
 
   @keyframes zoomIn {
     from {
@@ -78,6 +56,69 @@
   img {
     width: 100%;
   }
+  .button {
+  isolation: isolate;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(0, 0%, 10%);
+  border-radius: 9999rem;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  & > .bg-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border-radius: inherit;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: -1;
+
+    & > .bg-circle {
+      width: 150%;
+      aspect-ratio: 1;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(60%, 60%);
+      filter: blur(60px);
+      transition: 500ms ease;
+    }
+  }
+
+  & > .front {
+    color: hsl(0deg, 0%, 60%);
+    padding-block: 12px;
+    padding-inline: 24px 120px;
+    border-radius: inherit;
+    transition: 200ms ease;
+  }
+
+  &:is(:hover, :focus) {
+    & .bg-circle {
+      transition: transform 1s ease;
+      transform: translate(0, 0);
+    }
+
+    & > .front {
+      color: hsl(0deg, 0%, 10%);
+    }
+  }
+
+  &:focus-visible {
+    outline-color: white;
+  }
+}
+
 </style>
 <div class="container">
   <section class="crd-cont">
@@ -99,27 +140,35 @@
             </div>
             <div class="bottom-b">
               <p style="color: #38f2af">Fixed price</p>
-              <span style="color: #38f2af"
-                >{{ image.price }} {% static 'images/ether_logo.png' %}</span
-              >
+              <span style="color: #38f2af">{{ image.price }}
+                 <i class="fa-brands fa-ethereum"></i>
+              </span>
             </div>
             {% if image.user == request.user and not image.tx_hash %}
-            <button
-              onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')"
-            >
-              Mint NFT
-            </button>
+                <button class="button" onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">
+                    <div class="bg-container">
+                      <div class="bg-circle"></div>
+                    </div>
+                    <div class="front">
+                      <span>Mint NFT</span>
+                    </div>
+                </button>
+
             {% elif image.tx_hash and image.user != request.user %}
-            <button
-              onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})"
-            >
-              Buy NFT
-            </button>
+                  <button class="button" onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})">
+                    <div class="bg-container">
+                      <div class="bg-circle"></div>
+                    </div>
+                    <div class="front">
+                      <span>Buy NFT</span>
+                    </div>
+                </button>
             {% elif not image.tx_hash and image.user != request.user %}
-            <b style="color: orange">Pending!</b>
+            <button type="button" class="btn btn-warning">Warning</button>
             {% else %}
-            <b style="color: green">On sale</b>
+            <button type="button" class="btn btn-success">Owned</button>
             {% endif %}
+
             <div class="actions" style="right: 10px; bottom: 10px">
               <a
                 href="javascript:void(0);"
@@ -150,18 +199,15 @@
         </div>
       </div>
       <div id="myModal-{{ image.id }}" class="modal">
-        <img class="modal-content" id="img01-{{ image.id }}" />
-        <form
-          action="{% url 'delete_image' image.id %}"
-          method="POST"
-          style="display: inline"
-        >
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </form>
-      </div>
+          <img class="modal-content" id="img01-{{ image.id }}" src="{{ image.url }}" />
+          <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+
       {% endfor %}
     </div>
     {% else %}
@@ -277,7 +323,12 @@
       }
     } catch (error) {
       console.error('Error minting NFT:', error);
-      alert(`Error minting NFT: ${error.message || JSON.stringify(error)}`);
+      Swal.fire({
+      title: 'Error minting NFT!',
+      text: `The transaction was canceled`,
+      icon: 'warning',
+      confirmButtonText: 'OK',
+    });
     }
   }
 
@@ -481,6 +532,39 @@
       .then(data => console.log('Success:', data))
       .catch(error => console.error('Error:', error));
   }
+  
+document.addEventListener("DOMContentLoaded", function() {
+  const modals = document.querySelectorAll(".modal");
+  const images = document.querySelectorAll("img[id^='img01-']"); // Ensure this selector correctly targets your images
+
+  // Debugging log
+  console.log(`Found ${modals.length} modals and ${images.length} images`);
+
+  images.forEach(img => {
+    img.addEventListener('click', function() {
+      // Correctly reference the modal based on the image ID
+      const modalId = "myModal-" + this.id.split('-')[1];
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = "block";
+        document.body.classList.add("modal-open");
+      } else {
+        console.error('No modal found with ID:', modalId);
+      }
+    });
+  });
+
+  modals.forEach(modal => {
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        document.body.classList.remove("modal-open");
+      }
+    });
+  });
+});
+
+
 </script>
 
 {% endblock %}

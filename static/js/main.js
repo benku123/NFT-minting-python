@@ -1,5 +1,4 @@
 const inputs = document.querySelectorAll('.input');
-import Swal from 'sweetalert2';
 
 function addcl() {
   let parent = this.parentNode.parentNode;
@@ -102,3 +101,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+

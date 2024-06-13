@@ -5,12 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69e07a2-6856-4c25-a87c-29715cbeeb94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/media/profile_images/IMG_1500_3_pmUMWey.JPEG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contract/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contract/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/assets/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/assets/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/assets/sidebar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/facts.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/facts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/generate_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/generate_images.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/images/list_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/images/list_images.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/registration/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/signup.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

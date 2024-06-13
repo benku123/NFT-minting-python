@@ -1,46 +1,63 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
-    <style>
 
-      
-
-      
-    </style>
-
-    <div class="whole-body">
-            <div class="signup-container" id="signup-container">
-            <h2 style="color: white">Signup</h2>
-            <form class="signup-form" method="post">
-                {% csrf_token %}
-                {% if form.non_field_errors %}
-                    <div class="error" style="color: red;">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
-                {% for field in form %}
-                    <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="error" style="color: red;">
-                                {{ field.errors }}
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-                <button type="submit">Signup</button>
-            </form>
-        
-            <p class="or">
-                OR
-            </p>
-            
-            <a class="login-button" href="{% url 'login' %}">Login</a>
-        </div>
+<div class="whole-body">
+    <div class="signup-container" id="signup-container">
+        <h2 style="color: white">Signup</h2>
+        <form class="signup-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="profile-pic">
+                <img alt="User Pic" src="https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png" id="profile-image1" height="200">
+                <input id="profile-image-upload" class="hidden" type="file" name="profile_image" onchange="previewFile()">
+                <div style="color:#999;"></div>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="error" style="color: red;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error" style="color: red;">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Signup</button>
+        </form>
+        <p class="or">
+            OR
+        </p>
+        <a class="login-button" href="{% url 'login' %}">Login</a>
     </div>
-    
-    
+</div>
+
+<script>
+
+function previewFile() {
+    var preview = document.getElementById('profile-image1'); // Select the img element by its ID
+    var file    = document.querySelector('input[type=file]').files[0];
+    var reader  = new FileReader();
+
+    reader.addEventListener("load", function () {
+        preview.src = reader.result;
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+
+    $(document).ready(function() {
+        $('#profile-image1').on('click', function() {
+            $('#profile-image-upload').click();
+        });
+    });
+</script>
 
 {% endblock %}
