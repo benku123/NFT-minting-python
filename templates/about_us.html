@@ -14,8 +14,11 @@ body {
   min-height: 100vh;
 }
 
-/* -----------------company----------------------- */
 .company {
+    max-width: 70%;
+    width: 100%;
+    margin: auto;
+    text-align: center;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -47,13 +50,17 @@ body {
 }
 
 .company-info span .our {
-  color: #ffdc0e;
+  color: #38F2AF;
+  display: block;
+  text-align: center;
+
 }
 
 .company-info p{
   font-size: 1.1rem;
+  color: #e2e2e2;
 }
-/* ----------------------------------------------- */
+
 
 .team {
   display: flex;
@@ -63,7 +70,7 @@ body {
 .team span {
   font-size: 2.5rem;
   font-weight: bold;
-  border-bottom: 4px solid #ffdc0e;
+  border-bottom: 4px solid #38F2AF;
 }
 
 .container {
@@ -78,9 +85,9 @@ body {
   position: relative;
   background: #fff;
   max-width: 350px;
-  width: 350px;
-  margin: 20px;
-  border-radius: 2px;
+  width: 100%;
+  margin: 20px 100px;
+  border-radius:  50px;
   box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
 }
 
@@ -90,9 +97,11 @@ body {
 }
 
 .card-image img {
-  max-width: 100%;
+  max-width: 350px;
+  width: 100%;
   height: auto;
   visibility: hidden;
+  border-radius: 50%;
 }
 
 .card-title span {
@@ -100,7 +109,7 @@ body {
 }
 
 .yellow-surname {
-  color: #ffdc0e;
+  color: #38F2AF;
 }
 
 .card-description span {
@@ -199,7 +208,6 @@ body {
   }
 }
 
-/* ------------------------------footer---------------------------------------- */
 footer {
   background: #000;
   width: 100%;
@@ -219,7 +227,7 @@ footer .content .top {
   margin-bottom: 50px;
 }
 .content .top .logo-details {
-  color: #fdd166;
+  color: #38F2AF;
   font-size: 30px;
 }
 .content .top .media-icons {
@@ -373,11 +381,13 @@ footer .bottom-details .bottom_text {
   .team {
     display: flex;
     justify-content: center;
+    color: #38F2AF;
   }
 
   .team span {
     font-size: 1.7rem;
     font-weight: bold;
+    color: #38F2AF;
   }
   .company {
     display: flex;
@@ -440,34 +450,39 @@ footer .bottom-details .bottom_text {
     margin-right: 0rem;
   }
 }
+.cr-name{
+    color: #38F2AF;
+    font-size: 20px !important;
+}
 
 </style>
 
     <div class="company">
-      <div class="img">
-        <img src="https://raw.githubusercontent.com/pico-india/main-django/main/static/about-team.jpg" alt="" />
-      </div>
       <div class="company-info">
         <span>PHOTOS <span class="our">FOR EVERYONE</span></span>
         <p>
-          <b>Pico</b> is a India-based website dedicated for sharing stock photography under the Pico license. Pico allows
-          photographers to upload photos to its website, which are then curated by a team of photo editors. In Pico we are
-          aspiring to be one of the largest photography suppliers on the internet.
+          <b>Welcome</b> to our NFT minting website! We are two passionate students, <span class="cr-name">Rakhmonali</span> and  <span class="cr-name">Ulugbek</span>, who have come together to create this platform as our capstone project. As senior students on the brink of graduation, we have poured our skills and dedication into making this site a reality. <br>
+
+          <span class="cr-name">Ulugbek</span> brings his expertise from the fintech industry, where he has gained valuable insights into financial technologies and digital assets. His background helps ensure our platform is secure, efficient, and user-friendly. <br>
+          
+          <span class="cr-name">Rakhmonali</span> works as a web developer at Hanpass, where he has honed his skills in both frontend design and backend processes. His technical proficiency ensures our website not only looks great but also functions seamlessly behind the scenes. <br>
+          
+          Together, we aim to provide a straightforward and enjoyable NFT minting experience. Thank you for visiting, and we hope you enjoy using our platform as much as we enjoyed creating it!
         </p>
       </div>
     </div>
 
-    <div class="team"><span>OUR TEAM</span></div>
+    <div class="team"><span style="color: #38F2AF;">OUR TEAM</span></div>
     <div class="container">
       <div class="card">
-        <div class="card-image loading"><img src="https://images.pexels.com/photos/39866/entrepreneur-startup-start-up-man-39866.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /></div>
+        <div class="card-image loading"><img src="/static/image/ulug.jpg" alt="" /></div>
         <div class="card-info">
-          <h3 class="card-title loading"><span>Yash <span class="yellow-surname">Falke</span></span></h3>
+          <h3 class="card-title loading"><span>Khalimbetov <span class="yellow-surname">Ulugbek</span></span></h3>
           <p class="card-description loading">
             <span class="personal-info">
-              <span class="info">Graphic Designing Head</span> <br>
-              Pursuing IT Engineering (VIT Mumbai) <br>
-              Email: <a href="mailto:'yashfalke77@gmail.com'">yashfalke77@gmail.com</a>
+              <span class="info">20012767</span> <br>
+              Pursuing IT Engineering (Sejong University) <br>
+              Email: <a href="mailto:'benkuamv@gmail.com">benkuamv@gmail.com</a>
             </span>
           </p>
           <div class="card-mediaIcons">
@@ -480,14 +495,14 @@ footer .bottom-details .bottom_text {
         </div>
       </div>
       <div class="card">
-        <div class="card-image loading"><img src="https://media.istockphoto.com/photos/portrait-of-handsome-latino-african-man-picture-id1007763808?k=20&m=1007763808&s=612x612&w=0&h=q4qlV-99EK1VHePL1-Xon4gpdpK7kz3631XK4Hgr1ls=" alt="" /></div>
+        <div class="card-image loading"><img src="/static/image/roha.PNG" alt="" /></div>
         <div class="card-info">
-          <h3 class="card-title loading"><span>Harsh <span class="yellow-surname">Sunwani</span></span></h3>
+          <h3 class="card-title loading"><span>Zamonaliev <span class="yellow-surname">Rakhmonali</span></span></h3>
           <p class="card-description loading">
             <span class="personal-info">
-              <span class="info">Web Developing Head</span> <br>
-              Pursuing IT Engineering (VIT Mumbai) <br>
-              Email: <a href="mailto:'harshsunwani11@gmail.com'">harshsunwani11@gmail.com</a>
+              <span class="info">19012777</span> <br>
+              Pursuing IT Engineering (Sejong University) <br>
+              Email: <a href="mailto:'zamonalievr7@gmail.com">zamonalievr7@gmail.com</a>
             </span>
           </p>
           <div class="card-mediaIcons">
@@ -499,26 +514,7 @@ footer .bottom-details .bottom_text {
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-image loading"><img src="https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=600" alt="" /></div>
-        <div class="card-info">
-          <h3 class="card-title loading"><span>Nikhil <span class="yellow-surname">Jaiswal</span></span></h3>
-          <p class="card-description loading">
-            <span class="personal-info">
-              <span class="info">Marketing and Publicity Head</span> <br>
-              Pursuing IT Engineering (VIT Mumbai) <br>
-              Email: <a href="mailto:'nikjaiswal21@gmail.com'">nikjaiswal21@gmail.com</a>
-            </span>
-          </p>
-          <div class="card-mediaIcons">
-            <a href="#" class="loading" target="on_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="loading" target="on_blank"><i><img
-                  src="https://raw.githubusercontent.com/pico-india/main-django/main/static/PICO-LOGO-SHORT.png" alt="Pico"></a></i>
-            <a href="#" class="loading" target="on_blank"><i class="fab fa-instagram"></i></a>
           </div>
-        </div>
-      </div>
-    </div>
    
 
     <script>

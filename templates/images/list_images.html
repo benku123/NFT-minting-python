@@ -99,7 +99,9 @@
             </div>
             <div class="bottom-b">
               <p style="color: #38f2af">Fixed price</p>
-              <span style="color: #38f2af">{{ image.price }}</span>
+              <span style="color: #38f2af"
+                >{{ image.price }} {% static 'images/ether_logo.png' %}</span
+              >
             </div>
             {% if image.user == request.user and not image.tx_hash %}
             <button
