@@ -12,8 +12,8 @@ import json
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.http import JsonResponse
+
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from .models import LayerFolder, GeneratedImage, ApiProfile

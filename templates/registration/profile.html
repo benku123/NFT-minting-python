@@ -1,131 +1,332 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<style>
+  .header {
+    min-height: 60vh;
+    background: #009fff;
+    background: linear-gradient(to right, #ec2f4b, #009fff);
+    color: white;
+    clip-path: ellipse(100vw 60vh at 50% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-{% block content %}
-    <style>
-        .header {
-            min-height: 60vh;
-            background: #009FFF;
-            background: linear-gradient(to right, #ec2F4B, #009FFF);
-            color: white;
-            clip-path: ellipse(100vw 60vh at 50% 50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .details {
-            text-align: center;
-        }
-        
-        .profile-pic {
-            height: 6rem;
-            width: 6rem;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #fff;
-        }
-        
-        .location p {
-            display: inline-block;
-        }
-        
-        .location svg {
-            vertical-align: middle;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-        }
-        
-        .stats .col-4 {
-            width: 10rem;
-            text-align: center;
-        }
-        
-        .heading {
-            font-weight: 400;
-            font-size: 1.3rem;
-            margin: 1rem 0;
-        }
+  .details {
+    text-align: center;
+  }
 
-    </style>
-{#            <section class="profile">#}
-{#                <header class="header">#}
-{#                    <div class="details">#}
-{#                        {% if profile.profile_image %}#}
-{#                            <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" class="profile-pic">#}
-{#                        {% else %}#}
-{#                            <img src="https://via.placeholder.com/150" alt="{{ profile.user.username }}" class="profile-pic">#}
-{#                        {% endif %}#}
-{#                        <h1 class="heading">{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>#}
-{#                        <div class="location">#}
-{#                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">#}
-{#                                <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12 ,2Z"></path>#}
-{#                            </svg>#}
-{#                            <p style="color: white;">{{ profile.location }}</p>#}
-{#                        </div>#}
-{#                        <div class="stats" style="margin-top: 50px;">#}
-{#                            <div class="col-4" style="color: white;">#}
-{#                              <h4>{{ bought }}</h4>#}
-{#                              <a href="?filter_image=bought" style="color: white;">Bought Nft</a>#}
-{#                            </div>#}
-{#                            <div class="col-4">#}
-{#                              <h4>{{ sell }}</h4>#}
-{#                              <a href="?filter_image=sale" style="color: white;">On Sale</a>#}
-{#                            </div>#}
-{#                          </div>#}
-{#                    </div>#}
-{#                </header>#}
-{#            </section>#}
+  .profile-pic {
+    height: 6rem;
+    width: 6rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
 
-                    <div class="row">
-                    <div class="col-lg-12">
-                        {% if images %}
-                            <div class="heading-section">
-                                <h4>{{ filter_name }}</h4>
-                            </div>
-                            <div class="row">
-                                {% for image in images %}
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="item">
-                                            <img id="myImg-{{ image.id }}" alt="Thumbnail" class="thumbnail" src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
-                                            {% if image.user == request.user and not image.tx_hash %}
-                                                <button onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">Mint NFT</button>
-                                            {% elif image.tx_hash and image.user != request.user %}
-                                                <button onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})">Buy NFT</button>
-                                            {% elif not image.tx_hash and image.user != request.user %}
-                                                <b style="color: orange">Pending!</b>
-                                            {% else %}
-                                                <b style="color: green">on sale</b>
-                                            {% endif %}
-                                            <h4>Image Information</h4>
+  .location p {
+    display: inline-block;
+  }
 
-                                            <div class="actions" style="right: 10px; bottom: 10px;">
-                                                <a href="javascript:void(0);" class="like-button" id="like-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
-                                                    <i class="fa-solid fa-thumbs-up"></i>
-                                                </a>
-                                                <span id="like-count-{{ image.id }}">{{ image.total_likes }}</span>
-                                                <a href="javascript:void(0);" class="dislike-button" id="dislike-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
-                                                    <i class="fa-solid fa-thumbs-down"></i>
-                                                </a>
-                                                <span id="dislike-count-{{ image.id }}">{{ image.total_dislikes }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="myModal-{{ image.id }}" class="modal">
-                                        <img class="modal-content" id="img01-{{ image.id }}">
-                                        <form action="{% url 'delete_image' image.id %}" method="POST" style="display:inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                        </form>
-                                    </div>
-                                   {% endfor %}
-                            </div>
-                        {% else %}
-                            <h1>Currently no images minted</h1>
-                        {% endif %}
-                    </div>
-                </div>
+  .location svg {
+    vertical-align: middle;
+  }
 
-{% endblock %}
+  .stats {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .stats .col-4 {
+    width: 10rem;
+    text-align: center;
+  }
+
+  .heading {
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin: 1rem 0;
+  }
+
+  .body {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .unique-card {
+    max-width: 350px;
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+    margin: 30px 50px;
+  }
+
+  .unique-card:hover {
+    transform: translateY(-10px);
+  }
+
+  .unique-card-image {
+    height: 60%;
+    overflow: hidden;
+  }
+
+  .unique-card-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .unique-card-content {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .unique-card-title {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+  }
+
+  .unique-card-description {
+    margin: 10px 0;
+    font-size: 1em;
+    color: #666;
+  }
+
+  .unique-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .unique-buy-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .unique-buy-button:hover {
+    background-color: #218838;
+  }
+
+  .unique-thumbs {
+    display: flex;
+    gap: 10px;
+  }
+
+  .unique-thumbs button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .unique-thumbs-up:hover {
+    color: #007bff;
+  }
+
+  .unique-thumbs-down:hover {
+    color: #dc3545;
+  }
+</style>
+
+<div class="row">
+  <div class="col-lg-12">
+    {% if images %}
+    <div class="heading-section">
+      <h4>{{ filter_name }}</h4>
+    </div>
+    <div class="row">
+      {% for image in images %}
+      <div class="col-lg-3 col-sm-6">
+        <div class="item">
+          <img
+            id="myImg-{{ image.id }}"
+            alt="Thumbnail"
+            class="thumbnail"
+            src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+            alt="Generated Image"
+          />
+          {% if image.user == request.user and not image.tx_hash %}
+          <button
+            onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')"
+          >
+            Mint NFT
+          </button>
+          {% elif image.tx_hash and image.user != request.user %}
+          <button
+            onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})"
+          >
+            Buy NFT
+          </button>
+          {% elif not image.tx_hash and image.user != request.user %}
+          <b style="color: orange">Pending!</b>
+          {% else %}
+          <b style="color: green">on sale</b>
+          {% endif %}
+          <h4>Image Information</h4>
+
+          <div class="actions" style="right: 10px; bottom: 10px">
+            <a
+              href="javascript:void(0);"
+              class="like-button"
+              id="like-button-{{ image.id }}"
+              data-id="{{ image.id }}"
+              style="width: 20px"
+            >
+              <i class="fa-solid fa-thumbs-up"></i>
+            </a>
+            <span id="like-count-{{ image.id }}">{{ image.total_likes }}</span>
+            <a
+              href="javascript:void(0);"
+              class="dislike-button"
+              id="dislike-button-{{ image.id }}"
+              data-id="{{ image.id }}"
+              style="width: 20px"
+            >
+              <i class="fa-solid fa-thumbs-down"></i>
+            </a>
+            <span id="dislike-count-{{ image.id }}"
+              >{{ image.total_dislikes }}</span
+            >
+          </div>
+        </div>
+      </div>
+      <div id="myModal-{{ image.id }}" class="modal">
+        <img class="modal-content" id="img01-{{ image.id }}" />
+        <form
+          action="{% url 'delete_image' image.id %}"
+          method="POST"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <h1>Currently no images minted</h1>
+    {% endif %}
+  </div>
+</div>
+
+<div class="body">
+  <div class="unique-card">
+    <div class="unique-card-image">
+      <img
+        src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/QmSvpsfDJtRXF9FeW3Yf9bT66AQXMUGxPovE9FHc9kPTRA"
+        alt="NFT Image"
+      />
+    </div>
+    <div class="unique-card-content">
+      <h3 class="unique-card-title">NFT Title</h3>
+      <p class="unique-card-description">
+        This is a brief description of the NFT.
+      </p>
+      <div class="unique-card-actions">
+        <button class="unique-buy-button">Buy NFT</button>
+        <div class="unique-thumbs">
+          <button class="unique-thumbs-up">&#128077;</button>
+          <button class="unique-thumbs-down">&#128078;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="unique-card">
+    <div class="unique-card-image">
+      <img
+        src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/QmSvpsfDJtRXF9FeW3Yf9bT66AQXMUGxPovE9FHc9kPTRA"
+        alt="NFT Image"
+      />
+    </div>
+    <div class="unique-card-content">
+      <h3 class="unique-card-title">NFT Title</h3>
+      <p class="unique-card-description">
+        This is a brief description of the NFT.
+      </p>
+      <div class="unique-card-actions">
+        <button class="unique-buy-button">Buy NFT</button>
+        <div class="unique-thumbs">
+          <button class="unique-thumbs-up">&#128077;</button>
+          <button class="unique-thumbs-down">&#128078;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="unique-card">
+    <div class="unique-card-image">
+      <img
+        src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/QmSvpsfDJtRXF9FeW3Yf9bT66AQXMUGxPovE9FHc9kPTRA"
+        alt="NFT Image"
+      />
+    </div>
+    <div class="unique-card-content">
+      <h3 class="unique-card-title">NFT Title</h3>
+      <p class="unique-card-description">
+        This is a brief description of the NFT.
+      </p>
+      <div class="unique-card-actions">
+        <button class="unique-buy-button">Buy NFT</button>
+        <div class="unique-thumbs">
+          <button class="unique-thumbs-up">&#128077;</button>
+          <button class="unique-thumbs-down">&#128078;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unique-card">
+    <div class="unique-card-image">
+      <img
+        src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/QmSvpsfDJtRXF9FeW3Yf9bT66AQXMUGxPovE9FHc9kPTRA"
+        alt="NFT Image"
+      />
+    </div>
+    <div class="unique-card-content">
+      <h3 class="unique-card-title">NFT Title</h3>
+      <p class="unique-card-description">
+        This is a brief description of the NFT.
+      </p>
+      <div class="unique-card-actions">
+        <button class="unique-buy-button">Buy NFT</button>
+        <div class="unique-thumbs">
+          <button class="unique-thumbs-up">&#128077;</button>
+          <button class="unique-thumbs-down">&#128078;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="unique-card">
+    <div class="unique-card-image">
+      <img
+        src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/QmSvpsfDJtRXF9FeW3Yf9bT66AQXMUGxPovE9FHc9kPTRA"
+        alt="NFT Image"
+      />
+    </div>
+    <div class="unique-card-content">
+      <h3 class="unique-card-title">NFT Title</h3>
+      <p class="unique-card-description">
+        This is a brief description of the NFT.
+      </p>
+      <div class="unique-card-actions">
+        <button class="unique-buy-button">Buy NFT</button>
+        <div class="unique-thumbs">
+          <button class="unique-thumbs-up">&#128077;</button>
+          <button class="unique-thumbs-down">&#128078;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+d {% endblock %}
