@@ -1,140 +1,570 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-    <script>
-    let web3;
-    let userAddress;
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .container {
+    position: relative;
+  }
+  
 
-
-     async function mintNFT(ipfsHash) {
-         console.log(ipfsHash)
-        if (!web3 || !userAddress) {
-            alert('Connect with MetaMask first');
-            return;
-        }
-
-        const response = await fetch('/get_contract_data/');
-        const data = await response.json();
-        console.log(data)
-        const contract = new web3.eth.Contract(data.abi, data.address);
-
-        try {
-            const gasEstimate = await contract.methods.createCollectable(`ipfs://${ipfsHash}`).estimateGas({ from: userAddress });
-            const tx = {
-                from: userAddress,
-                to: data.address,
-                gas: gasEstimate,
-                data: contract.methods.createCollectable(`ipfs://${ipfsHash}`).encodeABI()
-            };
-            const txHash = await window.ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [tx],
-            });
-            alert(`Transaction sent: ${txHash}`);
-        } catch (error) {
-            console.error(error);
-            alert('Error sending transaction');
-        }
+  @keyframes zoomIn {
+    from {
+      transform: scale(0);
     }
 
-    $(document).ready(function() {
-            $('.like-button').click(function() {
-                var image_id = $(this).data('id');
-                $.ajax({
-                    url: '/like_image/' + image_id + '/',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function(response) {
-                        $('#like-count-' + image_id).text(response.total_likes);
-                        $('#dislike-count-' + image_id).text(response.total_dislikes);
-                    }
-                });
-            });
+    to {
+      transform: scale(1);
+    }
+  }
 
-            $('.dislike-button').click(function() {
-                var image_id = $(this).data('id');
-                $.ajax({
-                    url: '/dislike_image/' + image_id + '/',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function(response) {
-                        $('#dislike-count-' + image_id).text(response.total_dislikes);
-                        $('#like-count-' + image_id).text(response.total_likes);
-                    }
-                });
-            });
-        });
-    </script>
+  .crd {
+    max-width: 258px;
+    width: 100%;
+    height: 331px;
+    border-radius: 10px;
+    margin-bottom: 190px;
+  }
+  .crd-bottom {
+    background-color: #373943;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+  }
+  .crd-top img {
+    display: block; /* Ensure no extra space below the image */
+    width: 100%;
+  }
+  .crd-top,
+  .crd-bottom {
+    width: 100%;
+  }
+  .bottom-b {
+    display: flex;
+    justify-content: space-between;
+
+    padding-top: 30px;
+  }
+  .bottom-b span {
+    border: 1px solid #38f2af;
+    border-radius: 50px;
+    padding: 3px 5px;
+  }
+  img {
+    width: 100%;
+  }
+  .button {
+  isolation: isolate;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(0, 0%, 10%);
+  border-radius: 9999rem;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  & > .bg-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border-radius: inherit;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: -1;
+
+    & > .bg-circle {
+      width: 150%;
+      aspect-ratio: 1;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(60%, 60%);
+      filter: blur(60px);
+      transition: 500ms ease;
+    }
+  }
+
+  & > .front {
+    color: hsl(0deg, 0%, 60%);
+    padding-block: 12px;
+    padding-inline: 24px 120px;
+    border-radius: inherit;
+    transition: 200ms ease;
+  }
+
+  &:is(:hover, :focus) {
+    & .bg-circle {
+      transition: transform 1s ease;
+      transform: translate(0, 0);
+    }
+
+    & > .front {
+      color: hsl(0deg, 0%, 10%);
+    }
+  }
+
+  &:focus-visible {
+    outline-color: white;
+  }
+}
+
+</style>
 <div class="container">
+  <section class="crd-cont">
+    {% if images %}
     <div class="row">
-        <div class="col-lg-12">
-            <div class="page-content">
-                <div class="most-popular">
-                    <h2>{{ folder.name }}</h2>
-                    <p>Owned by: {{ folder.user.username }}</p>
-                    <div>
-                        <h3>Folder Image:</h3>
-                        <img src="https://ipfs.io/ipfs/{{ folder.ipfs_image_hash }}" style="width: 200px; height: 200px;" alt="Generated Image">
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {% if images %}
-                            <div class="heading-section">
-                                <h4><em>Most Popular</em> Right Now</h4>
-                            </div>
-                            <div class="row">
-                                {% for image in images %}
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="item">
-                                        <img src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
-                                        <a href="{% url "mint_nft" image.pk %}">Mint NFT</a>
-                                        <h4>Image Information</h4>
-                                        <ul>
-                                            <li>
-                                                <button class="like-button" data-id="{{ image.id }}">
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
-                                                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
-                                                        </svg>
-                                                        <span id="like-count-{{ image.id }}">{{ image.total_likes }}</span>
-                                                    </span>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dislike-button" data-id="{{ image.id }}">
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-down-fill" viewBox="0 0 16 16">
-                                                            <path d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.38 1.38 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51q.205.03.443.051c.713.065 1.669.071 2.516-.211.518-.173.994-.68 1.2-1.272a1.9 1.9 0 0 0-.234-1.734c.058-.118.103-.242.138-.362.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2 2 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.2 3.2 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.757 12.437.28 11.5.28H8c-.605 0-1.07.08-1.466.217a4.8 4.8 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.815 2 2.434 2 3.279v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.591"/>
-                                                        </svg>
-                                                        <span id="dislike-count-{{ image.id }}">{{ image.total_dislikes }}</span>
-                                                    </span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% else %}
-                            <h1>Currently not images minted</h1>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="main-button">
-                            <a href="browse.html">Discover Popular</a>
-                        </div>
-                    </div>
-                </div>
+      {% for image in images %}
+      <div class="col-md-4 mb-4">
+        <div class="crd">
+          <div class="crd-top">
+            <img
+              src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+              alt="Generated Image"
+            />
+          </div>
+          <div class="crd-bottom">
+            <div class="bottom-t">
+              <h3 style="color: #38f2af">Mirror Class Effect</h3>
+              <p>Pixart motion</p>
             </div>
+            <div class="bottom-b">
+              <p style="color: #38f2af">Fixed price</p>
+              <span style="color: #38f2af">{{ image.price }}
+                 <i class="fa-brands fa-ethereum"></i>
+              </span>
+            </div>
+            {% if image.user == request.user and not image.tx_hash %}
+                <button class="button" onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">
+                    <div class="bg-container">
+                      <div class="bg-circle"></div>
+                    </div>
+                    <div class="front">
+                      <span>Mint NFT</span>
+                    </div>
+                </button>
+
+            {% elif image.tx_hash and image.user != request.user %}
+                  <button class="button" onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})">
+                    <div class="bg-container">
+                      <div class="bg-circle"></div>
+                    </div>
+                    <div class="front">
+                      <span>Buy NFT</span>
+                    </div>
+                </button>
+            {% elif not image.tx_hash and image.user != request.user %}
+            <button type="button" class="btn btn-warning">Warning</button>
+            {% else %}
+            <button type="button" class="btn btn-success">Owned</button>
+            {% endif %}
+
+            <div class="actions" style="right: 10px; bottom: 10px">
+              <a
+                href="javascript:void(0);"
+                class="like-button"
+                id="like-button-{{ image.id }}"
+                data-id="{{ image.id }}"
+                style="width: 20px"
+              >
+                <i class="fa-solid fa-thumbs-up"></i>
+              </a>
+              <span id="like-count-{{ image.id }}"
+                >{{ image.total_likes }}</span
+              >
+              <a
+                href="javascript:void(0);"
+                class="dislike-button"
+                id="dislike-button-{{ image.id }}"
+                data-id="{{ image.id }}"
+                style="width: 20px"
+              >
+                <i class="fa-solid fa-thumbs-down"></i>
+              </a>
+              <span id="dislike-count-{{ image.id }}"
+                >{{ image.total_dislikes }}</span
+              >
+            </div>
+          </div>
         </div>
+      </div>
+      <div id="myModal-{{ image.id }}" class="modal">
+          <img class="modal-content" id="img01-{{ image.id }}" src="{{ image.url }}" />
+          <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+
+      {% endfor %}
     </div>
+    {% else %}
+    <h1>Currently no images minted</h1>
+    {% endif %}
+  </section>
 </div>
+
+<script>
+  let web3;
+  let userAddress;
+
+  async function connectMetaMask() {
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      try {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        userAddress = accounts[0];
+        console.log('Connected to MetaMask with address:', userAddress);
+        sendAccountToServer(userAddress);
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error);
+      }
+    } else {
+      alert('MetaMask is not installed. Please install it to use this app.');
+    }
+  }
+
+  async function fetchContractData() {
+    try {
+      const response = await fetch('/get_contract_data/');
+      const data = await response.json();
+      if (!data.abi || !data.address) {
+        throw new Error('Invalid contract data');
+      }
+      return data;
+    } catch (error) {
+      console.error('Error fetching contract data:', error);
+      throw error;
+    }
+  }
+
+  async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
+    try {
+      if (!userAddress) {
+        throw new Error(
+          'User address is not defined. Please connect to MetaMask.'
+        );
+      }
+      if (!ipfsHash || typeof ipfsHash !== 'string' || ipfsHash.length === 0) {
+        throw new Error('Invalid IPFS hash provided.');
+      }
+      if (!priceInWei || isNaN(priceInWei) || priceInWei <= 0) {
+        throw new Error('Price must be set and greater than zero.');
+      }
+
+      const gasEstimate = await contract.methods
+        .createCollectable(`ipfs://${ipfsHash}`, priceInWei)
+        .estimateGas({ from: userAddress });
+
+      const options = {
+        from: userAddress,
+        gas: web3.utils.toHex(gasEstimate) + 1,
+        gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+      };
+
+      const transaction = await contract.methods
+        .createCollectable(`ipfs://${ipfsHash}`, priceInWei)
+        .send(options);
+      Swal.fire({
+        title: 'Transaction Sent!',
+        text: `Transaction sent: ${transaction.transactionHash}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      const receipt = await web3.eth.getTransactionReceipt(
+        transaction.transactionHash
+      );
+      if (receipt && receipt.status) {
+        console.log('Transaction successful with receipt:', receipt);
+        const eventSignature = web3.utils.sha3(
+          'CollectableCreated(uint256,string,address,uint256)'
+        );
+        const collectableCreatedEvent = receipt.logs.find(
+          log => log.topics[0] === eventSignature
+        );
+        if (collectableCreatedEvent) {
+          const tokenId = web3.eth.abi.decodeParameter(
+            'uint256',
+            collectableCreatedEvent.topics[1]
+          );
+          // Convert priceInWei back to Ether for consistency in updateTransactionHash
+          const priceInEther = web3.utils.fromWei(priceInWei, 'ether');
+          await updateTransactionHash(
+            imageId,
+            transaction.transactionHash,
+            userAddress,
+            tokenId,
+            priceInEther
+          );
+        } else {
+          console.warn(
+            'CollectableCreated event not found in receipt:',
+            receipt
+          );
+        }
+        return receipt;
+      } else {
+        throw new Error('Transaction failed with no success status.');
+      }
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+      Swal.fire({
+      title: 'Error minting NFT!',
+      text: `The transaction was canceled`,
+      icon: 'warning',
+      confirmButtonText: 'OK',
+    });
+    }
+  }
+
+  async function handleMintNFT(ipfsHash, imageId, price) {
+    if (!web3 || !userAddress) {
+      alert('Connect with MetaMask first');
+      return;
+    }
+
+    try {
+      const data = await fetchContractData();
+      console.log('Fetched contract data:', data); // Debugging line to check data
+      const contract = new web3.eth.Contract(data.abi, data.address);
+      const priceInWei = web3.utils.toWei(price.toString(), 'ether');
+      await mintNFT(ipfsHash, contract, imageId, priceInWei);
+    } catch (error) {
+      console.error('Error during handleMintNFT:', error);
+      alert(`Error: ${error.message}`);
+    }
+  }
+
+  async function buyNFT(tokenId, contract, imageId, priceInWei) {
+    try {
+      if (!userAddress) {
+        throw new Error(
+          'User address is not defined. Please connect to MetaMask.'
+        );
+      }
+
+      const gasEstimate = await contract.methods
+        .purchaseCollectable(tokenId)
+        .estimateGas({ from: userAddress, value: priceInWei });
+
+      const options = {
+        from: userAddress,
+        gas: web3.utils.toHex(gasEstimate),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+        value: priceInWei,
+      };
+
+      const transaction = await contract.methods
+        .purchaseCollectable(tokenId)
+        .send(options);
+      Swal.fire({
+        title: 'Transaction Sent!',
+        text: `Transaction sent: ${transaction.transactionHash}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      const receipt = await web3.eth.getTransactionReceipt(
+        transaction.transactionHash
+      );
+      if (receipt && receipt.status) {
+        console.log('Transaction successful with receipt:', receipt);
+        await updateTransactionHash(
+          imageId,
+          transaction.transactionHash,
+          userAddress,
+          tokenId,
+          web3.utils.fromWei(priceInWei, 'ether')
+        );
+        return receipt;
+      } else {
+        throw new Error('Transaction failed with no success status.');
+      }
+    } catch (error) {
+      console.error('Error buying NFT:', error);
+      alert(`Error buying NFT: ${error.message || JSON.stringify(error)}`);
+    }
+  }
+
+  async function handleBuyNFT(tokenId, imageId) {
+    if (!web3 || !userAddress) {
+      alert('Connect with MetaMask first');
+      return;
+    }
+
+    try {
+      const data = await fetchContractData();
+      console.log('Fetched contract data:', data); // Debugging line to check data
+      const contract = new web3.eth.Contract(data.abi, data.address);
+
+      // Fetch the price in Wei for the given tokenId
+      const priceInWei = await contract.methods.tokenPrices(tokenId).call();
+
+      await buyNFT(tokenId, contract, imageId, priceInWei);
+    } catch (error) {
+      console.error('Error during handleBuyNFT:', error);
+      alert(`Error: ${error.message}`);
+    }
+  }
+
+  async function updateTransactionHash(
+    imageId,
+    txHash,
+    ownerAddress,
+    tokenId,
+    price
+  ) {
+    try {
+      const data = {
+        tx_hash: txHash,
+        owner_address: ownerAddress,
+        token_id: tokenId,
+        price: price, // Send price in Ether
+      };
+      console.log('Data being sent:', data);
+
+      const response = await fetch(`/update_image/${imageId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update transaction hash');
+      } else {
+        console.log('Transaction hash updated successfully');
+      }
+    } catch (error) {
+      console.error('Error updating transaction hash:', error);
+    }
+  }
+
+  $(document).ready(function () {
+    $('.like-button').click(function () {
+      var image_id = $(this).data('id');
+      $.ajax({
+        url: '/like_image/' + image_id + '/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+          $('#like-count-' + image_id).text(response.total_likes);
+          $('#dislike-count-' + image_id).text(response.total_dislikes);
+          if (response.liked) {
+            $('#like-button-' + image_id).addClass('liked');
+            $('#dislike-button-' + image_id).removeClass('disliked');
+          } else {
+            $('#like-button-' + image_id).removeClass('liked');
+          }
+        },
+      });
+    });
+
+    $('.dislike-button').click(function () {
+      var image_id = $(this).data('id');
+      $.ajax({
+        url: '/dislike_image/' + image_id + '/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+          $('#dislike-count-' + image_id).text(response.total_dislikes);
+          $('#like-count-' + image_id).text(response.total_likes);
+          if (response.disliked) {
+            $('#dislike-button-' + image_id).addClass('disliked');
+            $('#like-button-' + image_id).removeClass('liked');
+          } else {
+            $('#dislike-button-' + image_id).removeClass('disliked');
+          }
+        },
+      });
+    });
+
+    connectMetaMask();
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function sendAccountToServer(account) {
+    fetch('/api/save_account/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ account: account }),
+    })
+      .then(response => response.json())
+      .then(data => console.log('Success:', data))
+      .catch(error => console.error('Error:', error));
+  }
+  
+document.addEventListener("DOMContentLoaded", function() {
+  const modals = document.querySelectorAll(".modal");
+  const images = document.querySelectorAll("img[id^='img01-']"); // Ensure this selector correctly targets your images
+
+  // Debugging log
+  console.log(`Found ${modals.length} modals and ${images.length} images`);
+
+  images.forEach(img => {
+    img.addEventListener('click', function() {
+      // Correctly reference the modal based on the image ID
+      const modalId = "myModal-" + this.id.split('-')[1];
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = "block";
+        document.body.classList.add("modal-open");
+      } else {
+        console.error('No modal found with ID:', modalId);
+      }
+    });
+  });
+
+  modals.forEach(modal => {
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        document.body.classList.remove("modal-open");
+      }
+    });
+  });
+});
+
+
+</script>
 
 {% endblock %}

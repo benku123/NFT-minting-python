@@ -32,23 +32,3 @@ def generate_image_from_zip(zip_path):
         return base_image
 
 
-def verify_signature(address, message, signature):
-    """
-    Verify that the provided signature corresponds to the message signed by the given Ethereum address.
-
-    :param address: str - The Ethereum address expected to have signed the message.
-    :param message: str - The message that was signed (usually a nonce provided by the server).
-    :param signature: str - The signature produced by signing the message.
-    :return: bool - True if the signature is valid and was made by the owner of the address, False otherwise.
-    """
-    w3 = Web3()
-    prefixed_msg = w3.solidity_keccak(['string', 'address'], [message, address])
-    # Ensure the message hash is in the proper Ethereum signature format.
-    eth_hash = w3.solidity_keccak(['string', 'bytes32'], ['\x19Ethereum Signed Message:\n32', prefixed_msg])
-
-    # Recover the signer from the signature
-    signer = w3.eth.account.recoverHash(eth_hash, signature=signature)
-
-    # Check if the recovered signer address matches the provided address
-    return signer.lower() == address.lower()
-

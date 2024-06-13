@@ -2,6 +2,22 @@
 {% load static %}
 {% block content %}
 <div class="live-stream" style="margin-top: 200px; margin-left: 100px; margin-right: 100px;">
+{% if messages %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="col-lg-12">
               <div class="heading-section">
                 <h4><em>Most Popular</em> Layers</h4>
@@ -27,22 +43,21 @@
                              <a href="{% url "view_list_images" folder.pk %}">
                           <div class="down-content">
                             <div class="avatar">
-                              <img src="https://ipfs.io/ipfs/{{ folder.ipfs_image_hash }}" alt="Generated Image">
+                               <img src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ folder.ipfs_hash }}" alt="Generated Image">
                             </div>
                             <span><i class="fa fa-check"></i> {{ folder.user.username }}</span>
                             <h4>{{ folder.name }}</h4>
                           </div> 
-                                    </a>
+                             </a>
                         </div>
+                        <form action="{% url 'delete_folder' folder.pk %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                        </form>
                       </div>
-               
               {% endfor %}
                  
-              <div class="col-lg-12">
-                <div class="main-button">
-                  <a href="streams.html">Load More Streams</a>
-                </div>
-              </div>
+              
             </div>
           </div>
 {% endblock %}
