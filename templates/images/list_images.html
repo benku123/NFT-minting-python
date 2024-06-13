@@ -1,381 +1,484 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <style>
-    .container {
-        position: relative;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .container {
+    position: relative;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    display: block;
+    width: auto;
+    height: auto;
+    animation: zoomIn 3s;
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0);
     }
 
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-color: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(5px);
-        align-items: center;
-        justify-content: center;
+    to {
+      transform: scale(1);
     }
+  }
 
-    .modal-content {
-        max-width: 100%;
-        max-height: 100%;
-        margin: auto;
-        display: block;
-        width: auto;
-        height: auto;
-        animation: zoomIn 3s;
-    }
+  .crd {
+    max-width: 258px;
+    width: 100%;
+    height: 331px;
+    border-radius: 10px;
+    margin-bottom: 190px;
+  }
+  .crd-bottom {
+    background-color: #373943;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+  }
+  .crd-top img {
+    display: block; /* Ensure no extra space below the image */
+    width: 100%;
+  }
+  .crd-top,
+  .crd-bottom {
+    width: 100%;
+  }
+  .bottom-b {
+    display: flex;
+    justify-content: space-between;
 
-    @keyframes zoomIn {
-        from {
-            transform: scale(0);
-        }
-
-        to {
-            transform: scale(1);
-        }
-    }
+    padding-top: 30px;
+  }
+  .bottom-b span {
+    border: 1px solid #38f2af;
+    border-radius: 50px;
+    padding: 3px 5px;
+  }
+  img {
+    width: 100%;
+  }
 </style>
 <div class="container">
+  <section class="crd-cont">
+    {% if images %}
     <div class="row">
-        <div class="col-lg-12">
-            <div class="page-content">
-                <div class="most-popular">
-                    <h2>{{ folder.name }}</h2>
-                    <p>Owned by: {{ folder.user.username }}</p>
-                    <div>
-                        <h3>Folder Image:</h3>
-                        <img src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ folder.ipfs_hash }}" style="width: 200px; height: 200px;" alt="Generated Image">
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {% if images %}
-                            <div class="heading-section">
-                                <h4><em>Most Popular</em> Right Now</h4>
-                            </div>
-                            <div class="row">
-                                {% for image in images %}
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="item">
-                                        <img id="myImg-{{ image.id }}" alt="Thumbnail" class="thumbnail" src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}" alt="Generated Image">
-
-                                        {% if image.user == request.user and not image.tx_hash %}
-                                        <button onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')">Mint NFT</button>
-                                        {% elif image.tx_hash and image.user != request.user %}
-                                        <button onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})">Buy NFT</button>
-                                        {% elif not image.tx_hash and image.user != request.user %}
-                                        <b style="color: orange">Pending!</b>
-                                        {% else %}
-                                        <b style="color: green">on sale</b>
-                                        {% endif %}
-                                        <h4>Image Information</h4>
-                                    
-                                        <div class="actions" style="right: 10px; bottom: 10px;">
-                                            <a href="javascript:void(0);" class="like-button" id="like-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
-                                                <i class="fa-solid fa-thumbs-up"></i>
-                                            </a>
-                                            <span id="like-count-{{ image.id }}">{{ image.total_likes }}</span>
-                                            <a href="javascript:void(0);" class="dislike-button" id="dislike-button-{{ image.id }}" data-id="{{ image.id }}" style="width: 20px;">
-                                                <i class="fa-solid fa-thumbs-down"></i>
-                                            </a>
-                                            <span id="dislike-count-{{ image.id }}">{{ image.total_dislikes }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="myModal-{{ image.id }}" class="modal">
-                                    <img class="modal-content" id="img01-{{ image.id }}">
-                                    <form action="{% url 'delete_image' image.id %}" method="POST" style="display:inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% else %}
-                            <h1>Currently no images minted</h1>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+      {% for image in images %}
+      <div class="col-md-4 mb-4">
+        <div class="crd">
+          <div class="crd-top">
+            <img
+              src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+              alt="Generated Image"
+            />
+          </div>
+          <div class="crd-bottom">
+            <div class="bottom-t">
+              <h3 style="color: #38f2af">Mirror Class Effect</h3>
+              <p>Pixart motion</p>
             </div>
+            <div class="bottom-b">
+              <p style="color: #38f2af">Fixed price</p>
+              <span style="color: #38f2af">{{ image.price }}</span>
+            </div>
+            {% if image.user == request.user and not image.tx_hash %}
+            <button
+              onclick="handleMintNFT('{{ image.ipfs_hash }}', {{ image.id }}, '{{ image.price }}')"
+            >
+              Mint NFT
+            </button>
+            {% elif image.tx_hash and image.user != request.user %}
+            <button
+              onclick="handleBuyNFT('{{ image.token_id }}', {{ image.id }})"
+            >
+              Buy NFT
+            </button>
+            {% elif not image.tx_hash and image.user != request.user %}
+            <b style="color: orange">Pending!</b>
+            {% else %}
+            <b style="color: green">On sale</b>
+            {% endif %}
+            <div class="actions" style="right: 10px; bottom: 10px">
+              <a
+                href="javascript:void(0);"
+                class="like-button"
+                id="like-button-{{ image.id }}"
+                data-id="{{ image.id }}"
+                style="width: 20px"
+              >
+                <i class="fa-solid fa-thumbs-up"></i>
+              </a>
+              <span id="like-count-{{ image.id }}"
+                >{{ image.total_likes }}</span
+              >
+              <a
+                href="javascript:void(0);"
+                class="dislike-button"
+                id="dislike-button-{{ image.id }}"
+                data-id="{{ image.id }}"
+                style="width: 20px"
+              >
+                <i class="fa-solid fa-thumbs-down"></i>
+              </a>
+              <span id="dislike-count-{{ image.id }}"
+                >{{ image.total_dislikes }}</span
+              >
+            </div>
+          </div>
         </div>
+      </div>
+      <div id="myModal-{{ image.id }}" class="modal">
+        <img class="modal-content" id="img01-{{ image.id }}" />
+        <form
+          action="{% url 'delete_image' image.id %}"
+          method="POST"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </form>
+      </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <h1>Currently no images minted</h1>
+    {% endif %}
+  </section>
 </div>
 
 <script>
-let web3;
-let userAddress;
+  let web3;
+  let userAddress;
 
-
-async function connectMetaMask() {
+  async function connectMetaMask() {
     if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAddress = accounts[0];
-            console.log('Connected to MetaMask with address:', userAddress);
-            sendAccountToServer(userAddress);
-        } catch (error) {
-            console.error('Error connecting to MetaMask:', error);
-        }
+      web3 = new Web3(window.ethereum);
+      try {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        userAddress = accounts[0];
+        console.log('Connected to MetaMask with address:', userAddress);
+        sendAccountToServer(userAddress);
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error);
+      }
     } else {
-        alert('MetaMask is not installed. Please install it to use this app.');
+      alert('MetaMask is not installed. Please install it to use this app.');
     }
-}
+  }
 
-async function fetchContractData() {
+  async function fetchContractData() {
     try {
-        const response = await fetch('/get_contract_data/');
-        const data = await response.json();
-        if (!data.abi || !data.address) {
-            throw new Error('Invalid contract data');
-        }
-        return data;
+      const response = await fetch('/get_contract_data/');
+      const data = await response.json();
+      if (!data.abi || !data.address) {
+        throw new Error('Invalid contract data');
+      }
+      return data;
     } catch (error) {
-        console.error('Error fetching contract data:', error);
-        throw error;
+      console.error('Error fetching contract data:', error);
+      throw error;
     }
-}
+  }
 
-async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
+  async function mintNFT(ipfsHash, contract, imageId, priceInWei) {
     try {
-        if (!userAddress) {
-            throw new Error('User address is not defined. Please connect to MetaMask.');
-        }
-        if (!ipfsHash || typeof ipfsHash !== 'string' || ipfsHash.length === 0) {
-            throw new Error('Invalid IPFS hash provided.');
-        }
-        if (!priceInWei || isNaN(priceInWei) || priceInWei <= 0) {
-            throw new Error('Price must be set and greater than zero.');
-        }
+      if (!userAddress) {
+        throw new Error(
+          'User address is not defined. Please connect to MetaMask.'
+        );
+      }
+      if (!ipfsHash || typeof ipfsHash !== 'string' || ipfsHash.length === 0) {
+        throw new Error('Invalid IPFS hash provided.');
+      }
+      if (!priceInWei || isNaN(priceInWei) || priceInWei <= 0) {
+        throw new Error('Price must be set and greater than zero.');
+      }
 
-        const gasEstimate = await contract.methods.createCollectable(`ipfs://${ipfsHash}`, priceInWei).estimateGas({ from: userAddress });
+      const gasEstimate = await contract.methods
+        .createCollectable(`ipfs://${ipfsHash}`, priceInWei)
+        .estimateGas({ from: userAddress });
 
-        const options = {
-            from: userAddress,
-            gas: web3.utils.toHex(gasEstimate) + 1,
-            gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
-        };
+      const options = {
+        from: userAddress,
+        gas: web3.utils.toHex(gasEstimate) + 1,
+        gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+      };
 
-        const transaction = await contract.methods.createCollectable(`ipfs://${ipfsHash}`, priceInWei).send(options);
-        Swal.fire({
-              title: 'Transaction Sent!',
-              text: `Transaction sent: ${transaction.transactionHash}`,
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
+      const transaction = await contract.methods
+        .createCollectable(`ipfs://${ipfsHash}`, priceInWei)
+        .send(options);
+      Swal.fire({
+        title: 'Transaction Sent!',
+        text: `Transaction sent: ${transaction.transactionHash}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
 
-        const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
-        if (receipt && receipt.status) {
-            console.log('Transaction successful with receipt:', receipt);
-            const eventSignature = web3.utils.sha3('CollectableCreated(uint256,string,address,uint256)');
-            const collectableCreatedEvent = receipt.logs.find(log => log.topics[0] === eventSignature);
-            if (collectableCreatedEvent) {
-                const tokenId = web3.eth.abi.decodeParameter('uint256', collectableCreatedEvent.topics[1]);
-                // Convert priceInWei back to Ether for consistency in updateTransactionHash
-                const priceInEther = web3.utils.fromWei(priceInWei, 'ether');
-                await updateTransactionHash(imageId, transaction.transactionHash, userAddress, tokenId, priceInEther);
-            } else {
-                console.warn('CollectableCreated event not found in receipt:', receipt);
-            }
-            return receipt;
+      const receipt = await web3.eth.getTransactionReceipt(
+        transaction.transactionHash
+      );
+      if (receipt && receipt.status) {
+        console.log('Transaction successful with receipt:', receipt);
+        const eventSignature = web3.utils.sha3(
+          'CollectableCreated(uint256,string,address,uint256)'
+        );
+        const collectableCreatedEvent = receipt.logs.find(
+          log => log.topics[0] === eventSignature
+        );
+        if (collectableCreatedEvent) {
+          const tokenId = web3.eth.abi.decodeParameter(
+            'uint256',
+            collectableCreatedEvent.topics[1]
+          );
+          // Convert priceInWei back to Ether for consistency in updateTransactionHash
+          const priceInEther = web3.utils.fromWei(priceInWei, 'ether');
+          await updateTransactionHash(
+            imageId,
+            transaction.transactionHash,
+            userAddress,
+            tokenId,
+            priceInEther
+          );
         } else {
-            throw new Error('Transaction failed with no success status.');
+          console.warn(
+            'CollectableCreated event not found in receipt:',
+            receipt
+          );
         }
+        return receipt;
+      } else {
+        throw new Error('Transaction failed with no success status.');
+      }
     } catch (error) {
-        console.error('Error minting NFT:', error);
-        alert(`Error minting NFT: ${error.message || JSON.stringify(error)}`);
+      console.error('Error minting NFT:', error);
+      alert(`Error minting NFT: ${error.message || JSON.stringify(error)}`);
     }
-}
+  }
 
-async function handleMintNFT(ipfsHash, imageId, price) {
+  async function handleMintNFT(ipfsHash, imageId, price) {
     if (!web3 || !userAddress) {
-        alert('Connect with MetaMask first');
-        return;
+      alert('Connect with MetaMask first');
+      return;
     }
 
     try {
-        const data = await fetchContractData();
-        console.log('Fetched contract data:', data); // Debugging line to check data
-        const contract = new web3.eth.Contract(data.abi, data.address);
-        const priceInWei = web3.utils.toWei(price.toString(), 'ether');
-        await mintNFT(ipfsHash, contract, imageId, priceInWei);
+      const data = await fetchContractData();
+      console.log('Fetched contract data:', data); // Debugging line to check data
+      const contract = new web3.eth.Contract(data.abi, data.address);
+      const priceInWei = web3.utils.toWei(price.toString(), 'ether');
+      await mintNFT(ipfsHash, contract, imageId, priceInWei);
     } catch (error) {
-        console.error('Error during handleMintNFT:', error);
-        alert(`Error: ${error.message}`);
+      console.error('Error during handleMintNFT:', error);
+      alert(`Error: ${error.message}`);
     }
-}
+  }
 
-async function buyNFT(tokenId, contract, imageId, priceInWei) {
+  async function buyNFT(tokenId, contract, imageId, priceInWei) {
     try {
-        if (!userAddress) {
-            throw new Error('User address is not defined. Please connect to MetaMask.');
-        }
+      if (!userAddress) {
+        throw new Error(
+          'User address is not defined. Please connect to MetaMask.'
+        );
+      }
 
-        const gasEstimate = await contract.methods.purchaseCollectable(tokenId).estimateGas({ from: userAddress, value: priceInWei });
+      const gasEstimate = await contract.methods
+        .purchaseCollectable(tokenId)
+        .estimateGas({ from: userAddress, value: priceInWei });
 
-        const options = {
-            from: userAddress,
-            gas: web3.utils.toHex(gasEstimate),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
-            value: priceInWei
-        };
+      const options = {
+        from: userAddress,
+        gas: web3.utils.toHex(gasEstimate),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+        value: priceInWei,
+      };
 
-        const transaction = await contract.methods.purchaseCollectable(tokenId).send(options);
-        Swal.fire({
-              title: 'Transaction Sent!',
-              text: `Transaction sent: ${transaction.transactionHash}`,
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
+      const transaction = await contract.methods
+        .purchaseCollectable(tokenId)
+        .send(options);
+      Swal.fire({
+        title: 'Transaction Sent!',
+        text: `Transaction sent: ${transaction.transactionHash}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
 
-
-        const receipt = await web3.eth.getTransactionReceipt(transaction.transactionHash);
-        if (receipt && receipt.status) {
-            console.log('Transaction successful with receipt:', receipt);
-            await updateTransactionHash(imageId, transaction.transactionHash, userAddress, tokenId, web3.utils.fromWei(priceInWei, 'ether'));
-            return receipt;
-        } else {
-            throw new Error('Transaction failed with no success status.');
-        }
+      const receipt = await web3.eth.getTransactionReceipt(
+        transaction.transactionHash
+      );
+      if (receipt && receipt.status) {
+        console.log('Transaction successful with receipt:', receipt);
+        await updateTransactionHash(
+          imageId,
+          transaction.transactionHash,
+          userAddress,
+          tokenId,
+          web3.utils.fromWei(priceInWei, 'ether')
+        );
+        return receipt;
+      } else {
+        throw new Error('Transaction failed with no success status.');
+      }
     } catch (error) {
-        console.error('Error buying NFT:', error);
-        alert(`Error buying NFT: ${error.message || JSON.stringify(error)}`);
+      console.error('Error buying NFT:', error);
+      alert(`Error buying NFT: ${error.message || JSON.stringify(error)}`);
     }
-}
+  }
 
-async function handleBuyNFT(tokenId, imageId) {
+  async function handleBuyNFT(tokenId, imageId) {
     if (!web3 || !userAddress) {
-        alert('Connect with MetaMask first');
-        return;
+      alert('Connect with MetaMask first');
+      return;
     }
 
     try {
-        const data = await fetchContractData();
-        console.log('Fetched contract data:', data); // Debugging line to check data
-        const contract = new web3.eth.Contract(data.abi, data.address);
-        
-        // Fetch the price in Wei for the given tokenId
-        const priceInWei = await contract.methods.tokenPrices(tokenId).call();
-        
-        await buyNFT(tokenId, contract, imageId, priceInWei);
-    } catch (error) {
-        console.error('Error during handleBuyNFT:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
+      const data = await fetchContractData();
+      console.log('Fetched contract data:', data); // Debugging line to check data
+      const contract = new web3.eth.Contract(data.abi, data.address);
 
-async function updateTransactionHash(imageId, txHash, ownerAddress, tokenId, price) {
+      // Fetch the price in Wei for the given tokenId
+      const priceInWei = await contract.methods.tokenPrices(tokenId).call();
+
+      await buyNFT(tokenId, contract, imageId, priceInWei);
+    } catch (error) {
+      console.error('Error during handleBuyNFT:', error);
+      alert(`Error: ${error.message}`);
+    }
+  }
+
+  async function updateTransactionHash(
+    imageId,
+    txHash,
+    ownerAddress,
+    tokenId,
+    price
+  ) {
     try {
-        const data = {
-            tx_hash: txHash,
-            owner_address: ownerAddress,
-            token_id: tokenId,
-            price: price // Send price in Ether
-        };
-        console.log("Data being sent:", data);  
+      const data = {
+        tx_hash: txHash,
+        owner_address: ownerAddress,
+        token_id: tokenId,
+        price: price, // Send price in Ether
+      };
+      console.log('Data being sent:', data);
 
-        const response = await fetch(`/update_image/${imageId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            throw new Error('Failed to update transaction hash');
-        } else {
-            console.log('Transaction hash updated successfully');
-        }
+      const response = await fetch(`/update_image/${imageId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update transaction hash');
+      } else {
+        console.log('Transaction hash updated successfully');
+      }
     } catch (error) {
-        console.error('Error updating transaction hash:', error);
+      console.error('Error updating transaction hash:', error);
     }
-}
+  }
 
-$(document).ready(function () {
+  $(document).ready(function () {
     $('.like-button').click(function () {
-        var image_id = $(this).data('id');
-        $.ajax({
-            url: '/like_image/' + image_id + '/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function (response) {
-                $('#like-count-' + image_id).text(response.total_likes);
-                $('#dislike-count-' + image_id).text(response.total_dislikes);
-                if (response.liked) {
-                    $('#like-button-' + image_id).addClass('liked');
-                    $('#dislike-button-' + image_id).removeClass('disliked');
-                } else {
-                    $('#like-button-' + image_id).removeClass('liked');
-                }
-            }
-        });
+      var image_id = $(this).data('id');
+      $.ajax({
+        url: '/like_image/' + image_id + '/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+          $('#like-count-' + image_id).text(response.total_likes);
+          $('#dislike-count-' + image_id).text(response.total_dislikes);
+          if (response.liked) {
+            $('#like-button-' + image_id).addClass('liked');
+            $('#dislike-button-' + image_id).removeClass('disliked');
+          } else {
+            $('#like-button-' + image_id).removeClass('liked');
+          }
+        },
+      });
     });
 
     $('.dislike-button').click(function () {
-        var image_id = $(this).data('id');
-        $.ajax({
-            url: '/dislike_image/' + image_id + '/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function (response) {
-                $('#dislike-count-' + image_id).text(response.total_dislikes);
-                $('#like-count-' + image_id).text(response.total_likes);
-                if (response.disliked) {
-                    $('#dislike-button-' + image_id).addClass('disliked');
-                    $('#like-button-' + image_id).removeClass('liked');
-                } else {
-                    $('#dislike-button-' + image_id).removeClass('disliked');
-                }
-            }
-        });
+      var image_id = $(this).data('id');
+      $.ajax({
+        url: '/dislike_image/' + image_id + '/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+          $('#dislike-count-' + image_id).text(response.total_dislikes);
+          $('#like-count-' + image_id).text(response.total_likes);
+          if (response.disliked) {
+            $('#dislike-button-' + image_id).addClass('disliked');
+            $('#like-button-' + image_id).removeClass('liked');
+          } else {
+            $('#dislike-button-' + image_id).removeClass('disliked');
+          }
+        },
+      });
     });
 
     connectMetaMask();
-});
+  });
 
-function getCookie(name) {
+  function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
+      }
     }
     return cookieValue;
-}
+  }
 
-function sendAccountToServer(account) {
+  function sendAccountToServer(account) {
     fetch('/api/save_account/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({ account: account })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ account: account }),
     })
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
-    .catch((error) => console.error('Error:', error));
-}
-
-
+      .then(response => response.json())
+      .then(data => console.log('Success:', data))
+      .catch(error => console.error('Error:', error));
+  }
 </script>
 
 {% endblock %}
