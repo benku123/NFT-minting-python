@@ -10,7 +10,7 @@
   .container {
     position: relative;
   }
-  
+
 
   @keyframes zoomIn {
     from {
@@ -118,7 +118,57 @@
     outline-color: white;
   }
 }
+body.modal-open {
+    overflow: hidden;
+}
 
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 60px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.9); 
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.blurred-background {
+    filter: blur(5px);
+}
 </style>
 <div class="container">
   <section class="crd-cont">
@@ -129,9 +179,13 @@
         <div class="crd">
           <div class="crd-top">
             <img
-              src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
-              alt="Generated Image"
-            />
+                id="triggerModal-{{ image.id }}"
+                src="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+                alt="Generated Image"
+                data-image-url="https://lime-rapid-mandrill-910.mypinata.cloud/ipfs/{{ image.ipfs_hash }}"
+                data-image-id="{{ image.id }}"
+                style="width: 100%; max-width: 300px; cursor: pointer;"
+              />
           </div>
           <div class="crd-bottom">
             <div class="bottom-t">
@@ -198,16 +252,16 @@
           </div>
         </div>
       </div>
-      <div id="myModal-{{ image.id }}" class="modal">
-          <img class="modal-content" id="img01-{{ image.id }}" src="{{ image.url }}" />
-          <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
+       <div id="myModal-{{ image.id }}" class="modal" data-image-id="{{ image.id }}">
+        <span class="close" id="close-{{ image.id }}">&times;</span>
+        <img class="modal-content" id="img01-{{ image.id }}" src="" />
+        <form action="{% url 'delete_image' image.id %}" method="POST" style="display: inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">
-              <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-trash"></i>
             </button>
-          </form>
-        </div>
-
+        </form>
+    </div>
       {% endfor %}
     </div>
     {% else %}
@@ -500,7 +554,48 @@
         },
       });
     });
+    
+      var modal = $(".modal");
+    var modalImg = $(".modal-content");
+    var closeBtn = $(".close");
 
+    console.log("Modal elements assigned");
+
+    $("img").click(function() {
+        var img = $(this);
+        var imageUrl = img.data("image-url");
+        var imageId = img.data("image-id");
+
+        console.log("Image clicked", imageId, imageUrl);
+
+        $.ajax({
+            url: imageUrl, // Use the image URL from the data attribute
+            type: "GET",
+            success: function(data) {
+                console.log("AJAX request successful");
+                modalImg.attr("src", imageUrl);
+                modal.filter('[data-image-id="' + imageId + '"]').show();
+                $("body").addClass("modal-open");
+            },
+            error: function() {
+                console.error("Image could not be loaded.");
+            }
+        });
+    });
+
+    closeBtn.click(function() {
+        console.log("Close button clicked");
+        modal.hide();
+        $("body").removeClass("modal-open");
+    });
+
+    $(window).click(function(event) {
+        if ($(event.target).is(modal)) {
+            console.log("Click outside modal detected");
+            modal.hide();
+            $("body").removeClass("modal-open");
+        }
+    });
     connectMetaMask();
   });
 
@@ -532,39 +627,8 @@
       .then(data => console.log('Success:', data))
       .catch(error => console.error('Error:', error));
   }
+
   
-document.addEventListener("DOMContentLoaded", function() {
-  const modals = document.querySelectorAll(".modal");
-  const images = document.querySelectorAll("img[id^='img01-']"); // Ensure this selector correctly targets your images
-
-  // Debugging log
-  console.log(`Found ${modals.length} modals and ${images.length} images`);
-
-  images.forEach(img => {
-    img.addEventListener('click', function() {
-      // Correctly reference the modal based on the image ID
-      const modalId = "myModal-" + this.id.split('-')[1];
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.style.display = "block";
-        document.body.classList.add("modal-open");
-      } else {
-        console.error('No modal found with ID:', modalId);
-      }
-    });
-  });
-
-  modals.forEach(modal => {
-    modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        modal.style.display = "none";
-        document.body.classList.remove("modal-open");
-      }
-    });
-  });
-});
-
-
 </script>
 
 {% endblock %}
