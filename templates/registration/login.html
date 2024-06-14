@@ -19,5 +19,39 @@
         <a class="login-button" href="{% url 'signup' %}">Sign Up</a>
         </div>
 </div>
+    <script>
+    let web3;
+  let userAddress;
 
+  async function connectMetaMask() {
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      try {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        userAddress = accounts[0];
+        console.log('Connected to MetaMask with address:', userAddress);
+        sendAccountToServer(userAddress);
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error);
+      }
+    } else {
+      alert('MetaMask is not installed. Please install it to use this app.');
+    }
+  }
+    function sendAccountToServer(account) {
+    fetch('/api/save_account/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ account: account }),
+    })
+      .then(response => response.json())
+      .then(data => console.log('Success:', data))
+      .catch(error => console.error('Error:', error));
+  }
+    </script>
 {% endblock %}

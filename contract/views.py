@@ -33,23 +33,25 @@ def save_account(request):
             if not eth_address:
                 return JsonResponse({"error": "Ethereum address is required."}, status=400)
 
-            # Check if the eth_address already has an ApiProfile
-            try:
+                # Check if the current user is authenticated and create an ApiProfile if it does not exist
+            if request.user.is_authenticated:
+                profile = ApiProfile.objects.get(user=request.user)
+                profile.eth_address = eth_address
+                profile.save()
+
+                return JsonResponse({"success": f"Logged in successfully {eth_address}"})
+
+            else:
                 profile = ApiProfile.objects.filter(eth_address=eth_address).first()
                 login(request, profile.user)
-                return JsonResponse({"success": "Logged in successfully."})
-            except ApiProfile.DoesNotExist:
-                pass
+                return redirect("/")
 
-            # Check if the current user is authenticated and create an ApiProfile if it does not exist
-            if request.user.is_authenticated:
-                profile, created = ApiProfile.objects.get_or_create(user=request.user, defaults={'eth_address': eth_address})
-                if created:
-                    return JsonResponse({"success": "ApiProfile created successfully."})
-                else:
-                    return JsonResponse({"error": "ApiProfile already exists for this user."}, status=400)
-            else:
-                return JsonResponse({"error": "User is not authenticated."}, status=401)
+
+
+
+
+
+
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON."}, status=400)
